@@ -1,0 +1,14 @@
+#Titulo que podré ver en la pestaña actions de mi repositorio
+name: Mi Primer Workflow
+
+#le digo a github que ejecute esto cada vez que alguien suba cambios
+on: [push]
+
+jobs:
+  saludo:
+  #computadora temoiral en linux que me presta github
+    runs-on: ubuntu-latest
+    #tareas especificas, run me permite ejecutar insutrucciones de terminal como echo o date
+    steps:
+      - name: Saludar al usuario
+        run: echo "¡Hola! GitHub Actions está funcionando correctamente."
