@@ -2,7 +2,10 @@
 name: Mi Primer Workflow
 
 #le digo a github que ejecute esto cada vez que alguien suba cambios
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   saludo:
@@ -10,5 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     #tareas especificas, run me permite ejecutar insutrucciones de terminal como echo o date
     steps:
-      - name: Saludar al usuario
-        run: echo "¡Hola! GitHub Actions está funcionando correctamente."
+      - name: Instalar terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.5"
