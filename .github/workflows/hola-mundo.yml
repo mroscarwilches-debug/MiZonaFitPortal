@@ -22,8 +22,10 @@ jobs:
         uses: actions/checkout@v4
       - name: Listar directorio terraform
         run: ls -la
-      - name: Listar directorio terraform
+      - name: Listar directorio terraform con pwd
         run: pwd   
+      - name: Listar directorio terraform con getchilditems
+        run: Get-ChildItem -Path .\terraform
       - name: Enter terraform directory
         run: cd .\terraform
       - name: Listar directorio terraform
