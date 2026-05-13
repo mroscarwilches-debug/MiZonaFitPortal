@@ -28,3 +28,4 @@ jobs:
         run: ls -la ./terraform
       - name: Iniciar Terraform en carpeta terraform
         run: terraform init
+        working-directory: terraform
