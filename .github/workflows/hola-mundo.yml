@@ -22,3 +22,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Listar directorio terraform
         run: ls -la
+      - name: Enter terraform directory
+        run: cd terraform
+      - name: Initiate Terraform
+        run: terraform init
+        
