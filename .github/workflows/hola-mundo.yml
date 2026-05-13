@@ -23,11 +23,9 @@ jobs:
       - name: Listar directorio terraform
         run: ls -la
       - name: Listar directorio terraform
-        run: pwd
-      - name: Listar directorio terraform
-        run: ls -la    
+        run: pwd   
       - name: Enter terraform directory
-        run: cd terraform
+        run: cd .\terraform
       - name: Listar directorio terraform
         run: ls -la
       - name: Initiate Terraform
