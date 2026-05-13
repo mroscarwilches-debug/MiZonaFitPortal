@@ -18,4 +18,4 @@ jobs:
         with:
           terraform_version: "1.7.5"
       - name: Listar directorio terraform
-        run: ls -R
+        run: ls -la
