@@ -24,8 +24,14 @@ jobs:
         run: ls -la
       - name: Mostrar directorio actual
         run: pwd
-      - name: Listar carpeta terraform
+      - name: List terraform directory
         run: ls -la ./terraform
-      - name: Iniciar Terraform en carpeta terraform
+      - name: Initiate Terraform in terraform directory
         run: terraform init
+        working-directory: terraform
+      - name: Plan Terraform in terraform directory
+        run: terraform plan
+        working-directory: terraform
+      - name: Apply Terraform in terraform directory
+        run: terraform apply -auto-approve
         working-directory: terraform
