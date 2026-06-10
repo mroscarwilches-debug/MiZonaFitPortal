@@ -15,10 +15,27 @@ data "aws_ami" "ubuntu" {
 }
 
 resource "aws_instance" "example" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t3.micro"
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = "t3.micro"
+  key_name               = "Miprimerlaboratorio"
+  vpc_security_group_ids = [aws_security_group.web_sg.id]
+
+  user_data = <<-EOF
+    #!/bin/bash
+    apt-get update -y
+    apt-get install -y docker.io docker-compose-plugin git
+
+    systemctl start docker
+    systemctl enable docker
+    usermod -aG docker ubuntu
+
+    git clone https://github.com/mroscarwilches-debug/MiZonaFitPortal.git /opt/wilchesfitness
+
+    cd /opt/wilchesfitness/app
+    docker compose up -d --build
+  EOF
 
   tags = {
-    Name = "HelloWorld"
+    Name = "MiZonaFitPortal"
   }
 }
