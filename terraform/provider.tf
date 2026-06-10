@@ -1,9 +1,14 @@
-# main.tf o provider.tf
 terraform {
+  backend "s3" {
+    bucket = "wilchesfitness-tfstate"
+    key    = "terraform.tfstate"
+    region = "us-east-1"
+  }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.0" # Recomendado para asegurar compatibilidad [8]
+      version = "~> 5.0"
     }
   }
 }
