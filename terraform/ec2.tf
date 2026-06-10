@@ -17,7 +17,7 @@ data "aws_ami" "ubuntu" {
 resource "aws_instance" "example" {
   ami                    = data.aws_ami.ubuntu.id
   instance_type          = "t3.micro"
-  key_name               = "Miprimerlaboratorio"
+  key_name               = "WilchesFitness"
   vpc_security_group_ids = [aws_security_group.web_sg.id]
 
   user_data = <<-EOF
