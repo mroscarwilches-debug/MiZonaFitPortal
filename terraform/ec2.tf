@@ -25,9 +25,8 @@ resource "aws_instance" "example" {
     exec > /var/log/user-data.log 2>&1
 
     apt-get update -y
-    apt-get install -y curl git
+    apt-get install -y docker.io docker-compose git
 
-    curl -fsSL https://get.docker.com | sh
     systemctl start docker
     systemctl enable docker
     usermod -aG docker ubuntu
@@ -35,7 +34,7 @@ resource "aws_instance" "example" {
     git clone https://github.com/mroscarwilches-debug/MiZonaFitPortal.git /opt/wilchesfitness
 
     cd /opt/wilchesfitness/app
-    docker compose up -d --build
+    docker-compose up -d --build
   EOF
 
   tags = {
