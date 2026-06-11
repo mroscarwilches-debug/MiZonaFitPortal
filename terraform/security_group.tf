@@ -1,5 +1,5 @@
 resource "aws_security_group" "web_sg" {
-  name        = "mizonafitportal-sg"
+  name        = "wilchesfitness-sg"
   description = "Permite trafico HTTP y SSH al portal web"
 
   ingress {
@@ -26,6 +26,6 @@ resource "aws_security_group" "web_sg" {
   }
 
   tags = {
-    Name = "mizonafitportal-sg"
+    Name = "wilchesfitness-sg"
   }
 }
