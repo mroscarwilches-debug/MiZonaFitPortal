@@ -41,6 +41,24 @@
     }
     nav ul a:hover { color: #e8500a; }
 
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background-color: #f0f0f0;
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
     /* HERO */
     .hero {
       display: flex;
@@ -190,17 +208,85 @@
       font-size: 0.88rem;
     }
     footer strong { color: #e8500a; }
+
+    /* ── TABLET (≤ 900px) ── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 2rem; }
+      .hero h1 { font-size: 3rem; }
+      .stats { gap: 2rem; }
+      .section { padding: 4rem 2rem; }
+      .planes { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    }
+
+    /* ── MÓVIL (≤ 640px) ── */
+    @media (max-width: 640px) {
+      /* Nav hamburguesa */
+      nav { padding: 1rem 1.25rem; position: relative; }
+      .hamburger { display: flex; }
+      nav ul {
+        display: none;
+        flex-direction: column;
+        gap: 0;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: #111;
+        border-bottom: 2px solid #e8500a;
+        padding: 0.5rem 0;
+      }
+      nav ul.open { display: flex; }
+      nav ul li a {
+        display: block;
+        padding: 0.85rem 1.5rem;
+        font-size: 1rem;
+      }
+
+      /* Hero */
+      .hero { padding: 4rem 1.25rem; min-height: 75vh; }
+      .hero h1 { font-size: 2.2rem; letter-spacing: 1px; }
+      .hero p { font-size: 1rem; }
+      .btn { padding: 0.8rem 2rem; font-size: 0.95rem; margin-top: 2rem; }
+
+      /* Stats */
+      .stats { gap: 1.5rem; padding: 2rem 1rem; }
+      .stat h2 { font-size: 2rem; }
+
+      /* Secciones */
+      .section { padding: 3rem 1.25rem; }
+      .section-title { font-size: 1.5rem; margin-bottom: 2rem; }
+
+      /* Cards — columna única */
+      .cards { grid-template-columns: 1fr; }
+
+      /* Planes — columna única, sin scale en featured */
+      .planes { grid-template-columns: 1fr; }
+      .plan.featured { transform: scale(1); margin-top: 1rem; }
+
+      /* Footer */
+      footer { font-size: 0.8rem; padding: 2rem 1rem; line-height: 1.8; }
+    }
+
+    /* ── MÓVIL MUY PEQUEÑO (≤ 380px) ── */
+    @media (max-width: 380px) {
+      .hero h1 { font-size: 1.8rem; }
+      .logo { font-size: 1.3rem; }
+      .stat h2 { font-size: 1.7rem; }
+    }
   </style>
 </head>
 <body>
 
   <nav>
     <div class="logo">Wilches<span>Fitness</span></div>
-    <ul>
-      <li><a href="#servicios">Servicios</a></li>
-      <li><a href="#planes">Planes</a></li>
-      <li><a href="#contacto">Contacto</a></li>
+    <ul id="nav-menu">
+      <li><a href="#servicios" onclick="cerrarMenu()">Servicios</a></li>
+      <li><a href="#planes" onclick="cerrarMenu()">Planes</a></li>
+      <li><a href="#contacto" onclick="cerrarMenu()">Contacto</a></li>
     </ul>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 
   <!-- HERO -->
@@ -294,6 +380,15 @@
     <p style="margin-top:0.5rem;">📍 Bogotá, Colombia &nbsp;|&nbsp; 📞 +57 300 000 0000 &nbsp;|&nbsp; ✉️ info@wilchesfitness.com</p>
     <p style="margin-top:1rem;">&copy; 2026 WilchesFitness. Todos los derechos reservados.</p>
   </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('nav-menu').classList.toggle('open');
+    }
+    function cerrarMenu() {
+      document.getElementById('nav-menu').classList.remove('open');
+    }
+  </script>
 
 </body>
 </html>
