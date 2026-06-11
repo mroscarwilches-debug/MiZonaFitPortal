@@ -1,6 +1,6 @@
 resource "aws_security_group" "web_sg" {
   name        = "mizonafitportal-sg"
-  description = "Permite trafico HTTP publico y SSH al portal web"
+  description = "Permite trafico HTTP y SSH al portal web"
 
   ingress {
     description = "HTTP"
