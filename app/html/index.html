@@ -5,297 +5,340 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WilchesFitness</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --naranja:      #e8500a;
+      --naranja-dark: #c4400a;
+      --fondo:        #0d0d0d;
+      --fondo-card:   #1a1a1a;
+      --fondo-nav:    #111111;
+      --texto:        #f0f0f0;
+      --muted:        #999999;
+      --borde:        #2a2a2a;
+    }
+
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #0d0d0d;
-      color: #f0f0f0;
+      background-color: var(--fondo);
+      color: var(--texto);
+      overflow-x: hidden;
     }
 
-    /* NAV */
+    /* ──────────────────────────────
+       NAV  —  base = móvil
+    ────────────────────────────── */
     nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1rem 3rem;
-      background-color: #111;
+      padding: 0.85rem 1.2rem;
+      background-color: var(--fondo-nav);
       position: sticky;
       top: 0;
-      z-index: 100;
-      border-bottom: 2px solid #e8500a;
+      z-index: 200;
+      border-bottom: 2px solid var(--naranja);
     }
     .logo {
-      font-size: 1.6rem;
+      font-size: 1.35rem;
       font-weight: 800;
-      color: #e8500a;
-      letter-spacing: 1px;
+      color: var(--naranja);
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
     }
-    .logo span { color: #f0f0f0; }
-    nav ul { list-style: none; display: flex; gap: 2rem; }
-    nav ul a {
-      text-decoration: none;
-      color: #ccc;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-    nav ul a:hover { color: #e8500a; }
+    .logo span { color: var(--texto); }
 
+    /* Menú hamburguesa — visible solo en móvil */
     .hamburger {
-      display: none;
+      display: flex;
       flex-direction: column;
       justify-content: center;
+      align-items: center;
       gap: 5px;
       background: none;
       border: none;
       cursor: pointer;
-      padding: 6px;
-      min-width: 36px;
-      min-height: 36px;
+      min-width: 44px;
+      min-height: 44px;
     }
     .hamburger span {
       display: block;
       width: 22px;
       height: 2px;
-      background-color: #f0f0f0;
+      background-color: var(--texto);
       border-radius: 2px;
     }
 
-    /* HERO */
+    /* Links del nav — colapsados en móvil */
+    nav ul {
+      list-style: none;
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: var(--fondo-nav);
+      border-bottom: 2px solid var(--naranja);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      z-index: 199;
+    }
+    nav ul.open { display: flex; }
+    nav ul li a {
+      display: block;
+      padding: 1rem 1.5rem;
+      color: #ccc;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1rem;
+      border-bottom: 1px solid #1e1e1e;
+    }
+    nav ul li:last-child a { border-bottom: none; }
+    nav ul li a:active { color: var(--naranja); background: #161616; }
+
+    /* ──────────────────────────────
+       HERO  —  base = móvil
+    ────────────────────────────── */
     .hero {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 6rem 2rem;
-      background: linear-gradient(135deg, #111 60%, #1a0a00);
-      min-height: 90vh;
+      padding: 3.5rem 1.2rem;
+      background: linear-gradient(160deg, #111 55%, #1a0a00);
+      min-height: 60vh;
     }
     .hero h1 {
-      font-size: 4rem;
+      font-size: 2rem;
       font-weight: 900;
-      line-height: 1.1;
+      line-height: 1.15;
       text-transform: uppercase;
-      letter-spacing: 2px;
+      letter-spacing: 0px;
+      word-break: break-word;
     }
-    .hero h1 span { color: #e8500a; }
+    .hero h1 span { color: var(--naranja); }
     .hero p {
-      margin-top: 1.5rem;
-      font-size: 1.2rem;
+      margin-top: 1rem;
+      font-size: 0.97rem;
       color: #aaa;
-      max-width: 560px;
+      line-height: 1.6;
     }
     .btn {
-      display: inline-block;
-      margin-top: 2.5rem;
-      padding: 0.9rem 2.5rem;
-      background-color: #e8500a;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1.8rem;
+      padding: 0.85rem 2rem;
+      min-height: 44px;
+      background-color: var(--naranja);
       color: #fff;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 700;
       border-radius: 4px;
       text-decoration: none;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
       transition: background 0.2s;
     }
-    .btn:hover { background-color: #c4400a; }
+    .btn:active { background-color: var(--naranja-dark); }
 
-    /* STATS */
+    /* ──────────────────────────────
+       STATS  —  base = móvil (2×2)
+    ────────────────────────────── */
     .stats {
-      display: flex;
-      justify-content: center;
-      gap: 4rem;
-      padding: 3rem 2rem;
-      background-color: #e8500a;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background-color: var(--naranja);
     }
-    .stat { text-align: center; }
-    .stat h2 { font-size: 2.5rem; font-weight: 900; color: #fff; }
-    .stat p { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #ffe0d0; }
+    .stat {
+      text-align: center;
+      padding: 1.4rem 0.8rem;
+      border-right:  1px solid rgba(255,255,255,0.2);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    .stat:nth-child(2n) { border-right: none; }
+    .stat:nth-child(3),
+    .stat:nth-child(4)  { border-bottom: none; }
+    .stat h2 { font-size: 1.8rem; font-weight: 900; color: #fff; }
+    .stat p  { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; color: #ffe0d0; margin-top: 3px; }
 
-    /* SERVICIOS */
+    /* ──────────────────────────────
+       SECCIONES  —  base = móvil
+    ────────────────────────────── */
     .section {
-      padding: 5rem 3rem;
+      padding: 2.8rem 1.2rem;
       max-width: 1100px;
       margin: 0 auto;
+      width: 100%;
     }
     .section-title {
       text-align: center;
-      font-size: 2rem;
+      font-size: 1.5rem;
       font-weight: 800;
       text-transform: uppercase;
-      margin-bottom: 3rem;
-      letter-spacing: 1px;
+      margin-bottom: 1.8rem;
+      letter-spacing: 0.5px;
     }
-    .section-title span { color: #e8500a; }
+    .section-title span { color: var(--naranja); }
 
+    /* CARDS */
     .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: 1fr;
+      gap: 1rem;
     }
     .card {
-      background-color: #1a1a1a;
+      background-color: var(--fondo-card);
       border-radius: 8px;
-      padding: 2rem;
-      border-top: 3px solid #e8500a;
-      transition: transform 0.2s;
+      padding: 1.5rem;
+      border-top: 3px solid var(--naranja);
     }
-    .card:hover { transform: translateY(-4px); }
-    .card .icon { font-size: 2.5rem; margin-bottom: 1rem; }
-    .card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase; }
-    .card p { color: #999; font-size: 0.92rem; line-height: 1.6; }
+    .card .icon { font-size: 2rem; margin-bottom: 0.75rem; display: block; }
+    .card h3    { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; text-transform: uppercase; }
+    .card p     { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
 
     /* PLANES */
-    .planes-bg { background-color: #111; }
+    .planes-bg { background-color: var(--fondo-nav); }
     .planes {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: 1fr;
+      gap: 1.8rem;
+      padding-top: 0.8rem;
     }
     .plan {
-      background-color: #1a1a1a;
+      background-color: var(--fondo-card);
       border-radius: 8px;
-      padding: 2.5rem 2rem;
+      padding: 2rem 1.5rem;
       text-align: center;
-      border: 1px solid #2a2a2a;
+      border: 1px solid var(--borde);
       position: relative;
     }
-    .plan.featured { border-color: #e8500a; transform: scale(1.03); }
+    .plan.featured { border-color: var(--naranja); margin-top: 0.8rem; }
     .plan.featured::before {
       content: "MÁS POPULAR";
       position: absolute;
-      top: -14px;
+      top: -13px;
       left: 50%;
       transform: translateX(-50%);
-      background: #e8500a;
+      background: var(--naranja);
       color: #fff;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 700;
-      padding: 4px 14px;
+      padding: 3px 12px;
       border-radius: 20px;
-      letter-spacing: 1px;
+      white-space: nowrap;
     }
-    .plan h3 { font-size: 1.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-    .plan .price { font-size: 2.8rem; font-weight: 900; color: #e8500a; margin: 1rem 0; line-height: 1; }
-    .plan .price sup { font-size: 1.2rem; vertical-align: super; }
-    .plan .price sub { font-size: 0.9rem; color: #777; }
-    .plan ul { list-style: none; margin: 1.5rem 0; text-align: left; }
-    .plan ul li { padding: 0.45rem 0; color: #bbb; font-size: 0.92rem; border-bottom: 1px solid #2a2a2a; }
-    .plan ul li::before { content: "✓ "; color: #e8500a; font-weight: 700; }
+    .plan h3        { font-size: 1.1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .plan .price    { font-size: 2.5rem; font-weight: 900; color: var(--naranja); margin: 0.8rem 0; line-height: 1; }
+    .plan .price sup { font-size: 1rem; vertical-align: super; }
+    .plan .price sub { font-size: 0.85rem; color: #777; }
+    .plan ul        { list-style: none; margin: 1.2rem 0; text-align: left; }
+    .plan ul li     { padding: 0.5rem 0; color: #bbb; font-size: 0.9rem; border-bottom: 1px solid var(--borde); }
+    .plan ul li::before { content: "✓ "; color: var(--naranja); font-weight: 700; }
+    .plan .btn      { width: 100%; margin-top: 0.5rem; }
 
     /* FOOTER */
     footer {
       background-color: #0a0a0a;
       text-align: center;
-      padding: 2.5rem 1rem;
+      padding: 2rem 1.2rem;
       border-top: 2px solid #1a1a1a;
       color: #555;
-      font-size: 0.88rem;
+      font-size: 0.82rem;
+      line-height: 1.6;
     }
-    footer strong { color: #e8500a; }
+    footer strong { color: var(--naranja); }
     .footer-contact {
       display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.4rem 1.2rem;
-      margin-top: 0.6rem;
+      flex-direction: column;
+      gap: 0.3rem;
+      align-items: center;
+      margin-top: 0.5rem;
     }
-    .footer-contact span { white-space: nowrap; }
 
-    /* ════════════════════════════
-       TABLET  ≤ 900px
-    ════════════════════════════ */
-    @media (max-width: 900px) {
+    /* ══════════════════════════════════════
+       TABLET  ≥ 640px
+    ══════════════════════════════════════ */
+    @media (min-width: 640px) {
       nav { padding: 1rem 2rem; }
-      .hero h1 { font-size: 3rem; }
-      .stats { gap: 2.5rem; }
-      .section { padding: 4rem 2rem; }
-    }
+      .logo { font-size: 1.55rem; letter-spacing: 1px; }
 
-    /* ════════════════════════════
-       MÓVIL  ≤ 640px  (iPhone 13 Pro Max = 428px)
-    ════════════════════════════ */
-    @media (max-width: 640px) {
-
-      /* — Nav — */
-      nav { padding: 0.85rem 1.2rem; position: relative; }
-      .hamburger { display: flex; }
+      /* Nav horizontal */
+      .hamburger { display: none; }
       nav ul {
-        display: none;
-        flex-direction: column;
-        gap: 0;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background-color: #111;
-        border-bottom: 2px solid #e8500a;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+        display: flex !important;
+        flex-direction: row;
+        position: static;
+        background: none;
+        border: none;
+        box-shadow: none;
+        gap: 2rem;
       }
-      nav ul.open { display: flex; }
       nav ul li a {
-        display: block;
-        padding: 1rem 1.5rem;
-        font-size: 1rem;
-        border-bottom: 1px solid #1e1e1e;
-      }
-
-      /* — Hero — */
-      .hero { padding: 3.5rem 1.2rem; min-height: 65vh; }
-      .hero h1 { font-size: 2.1rem; letter-spacing: 0.5px; }
-      .hero p { font-size: 0.97rem; margin-top: 1rem; }
-      .btn { padding: 0.8rem 2rem; font-size: 0.9rem; margin-top: 1.8rem; }
-
-      /* — Stats: grid 2×2 — */
-      .stats {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0;
         padding: 0;
+        border: none;
+        font-size: 0.95rem;
+        transition: color 0.2s;
       }
-      .stat {
-        padding: 1.5rem 1rem;
-        border-right: 1px solid rgba(255,255,255,0.15);
-        border-bottom: 1px solid rgba(255,255,255,0.15);
+      nav ul li a:hover   { color: var(--naranja); }
+      nav ul li a:active  { background: none; }
+
+      .hero { padding: 5rem 2rem; min-height: 75vh; }
+      .hero h1 { font-size: 3rem; letter-spacing: 1px; }
+      .hero p  { font-size: 1.1rem; max-width: 520px; margin-top: 1.2rem; }
+      .btn     { padding: 0.9rem 2.5rem; font-size: 1rem; margin-top: 2rem; }
+
+      /* Stats: fila horizontal en tablet */
+      .stats {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 2.5rem;
+        padding: 2.5rem 2rem;
       }
-      .stat:nth-child(2n)   { border-right: none; }
-      .stat:nth-child(3),
-      .stat:nth-child(4)    { border-bottom: none; }
-      .stat h2 { font-size: 1.9rem; }
-      .stat p  { font-size: 0.72rem; }
+      .stat { border: none; padding: 0; }
+      .stat h2 { font-size: 2.2rem; }
+      .stat p  { font-size: 0.8rem; }
 
-      /* — Secciones — */
-      .section { padding: 2.8rem 1.2rem; }
-      .section-title { font-size: 1.45rem; margin-bottom: 1.8rem; }
+      .section       { padding: 4rem 2rem; }
+      .section-title { font-size: 1.8rem; margin-bottom: 2.5rem; }
 
-      /* — Cards — */
-      .cards { grid-template-columns: 1fr; gap: 1rem; }
-      .card { padding: 1.5rem; }
-      .card .icon { font-size: 2rem; }
+      .cards { grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+      .card  { padding: 1.8rem; }
 
-      /* — Planes — */
-      .planes { grid-template-columns: 1fr; gap: 2rem; }
-      .plan { padding: 2rem 1.5rem; }
+      .planes { grid-template-columns: minmax(0, 420px); justify-content: center; gap: 1.5rem; }
       .plan.featured { transform: none; }
-      .plan.featured::before { font-size: 0.7rem; }
 
-      /* — Footer — */
-      footer { padding: 2rem 1.2rem; font-size: 0.82rem; }
-      .footer-contact { flex-direction: column; gap: 0.35rem; align-items: center; }
+      .footer-contact { flex-direction: row; flex-wrap: wrap; gap: 0.4rem 1.2rem; justify-content: center; }
     }
 
-    /* ════════════════════════════
-       MÓVIL PEQUEÑO  ≤ 390px
-    ════════════════════════════ */
-    @media (max-width: 390px) {
-      .logo { font-size: 1.3rem; }
-      .hero h1 { font-size: 1.75rem; }
-      .hero p { font-size: 0.9rem; }
-      .stat h2 { font-size: 1.6rem; }
-      .section-title { font-size: 1.3rem; }
+    /* ══════════════════════════════════════
+       ESCRITORIO  ≥ 1024px
+    ══════════════════════════════════════ */
+    @media (min-width: 1024px) {
+      nav  { padding: 1rem 3rem; }
+      .logo { font-size: 1.6rem; }
+
+      .hero    { padding: 6rem 2rem; min-height: 90vh; }
+      .hero h1 { font-size: 4rem; letter-spacing: 2px; }
+      .hero p  { font-size: 1.2rem; }
+      .btn     { margin-top: 2.5rem; }
+
+      .stats   { gap: 4rem; padding: 3rem 2rem; }
+      .stat h2 { font-size: 2.5rem; }
+      .stat p  { font-size: 0.85rem; }
+
+      .section       { padding: 5rem 3rem; }
+      .section-title { font-size: 2rem; margin-bottom: 3rem; }
+
+      .cards { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+      .card:hover { transform: translateY(-4px); transition: transform 0.2s; }
+
+      .planes { grid-template-columns: repeat(3, 1fr); justify-content: initial; max-width: 100%; }
+      .plan.featured { transform: scale(1.03); }
     }
   </style>
 </head>
@@ -305,8 +348,8 @@
     <div class="logo">Wilches<span>Fitness</span></div>
     <ul id="nav-menu">
       <li><a href="#servicios" onclick="cerrarMenu()">Servicios</a></li>
-      <li><a href="#planes" onclick="cerrarMenu()">Planes</a></li>
-      <li><a href="#contacto" onclick="cerrarMenu()">Contacto</a></li>
+      <li><a href="#planes"    onclick="cerrarMenu()">Planes</a></li>
+      <li><a href="#contacto"  onclick="cerrarMenu()">Contacto</a></li>
     </ul>
     <button class="hamburger" onclick="toggleMenu()" aria-label="Abrir menú">
       <span></span><span></span><span></span>
@@ -315,7 +358,7 @@
 
   <!-- HERO -->
   <section class="hero">
-    <h1>Transforma tu<br/><span>cuerpo y mente</span></h1>
+    <h1>Transforma tu <span>cuerpo y mente</span></h1>
     <p>Entrenamiento personalizado, nutrición y bienestar para alcanzar tus metas con disciplina y resultados reales.</p>
     <a href="#planes" class="btn">Ver planes</a>
   </section>
@@ -334,22 +377,22 @@
       <h2 class="section-title">Nuestros <span>Servicios</span></h2>
       <div class="cards">
         <div class="card">
-          <div class="icon">🏋️</div>
+          <span class="icon">🏋️</span>
           <h3>Entrenamiento de fuerza</h3>
           <p>Programas de pesas diseñados por expertos para ganar músculo y mejorar tu composición corporal.</p>
         </div>
         <div class="card">
-          <div class="icon">🏃</div>
+          <span class="icon">🏃</span>
           <h3>Cardio & HIIT</h3>
           <p>Sesiones de alta intensidad que queman grasa y mejoran tu resistencia cardiovascular.</p>
         </div>
         <div class="card">
-          <div class="icon">🥗</div>
+          <span class="icon">🥗</span>
           <h3>Nutrición deportiva</h3>
           <p>Asesoría nutricional personalizada para complementar tu entrenamiento y maximizar resultados.</p>
         </div>
         <div class="card">
-          <div class="icon">🧘</div>
+          <span class="icon">🧘</span>
           <h3>Yoga & Movilidad</h3>
           <p>Clases para mejorar flexibilidad, reducir el estrés y acelerar la recuperación muscular.</p>
         </div>
