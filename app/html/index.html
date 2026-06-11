@@ -44,19 +44,21 @@
     .hamburger {
       display: none;
       flex-direction: column;
+      justify-content: center;
       gap: 5px;
       background: none;
       border: none;
       cursor: pointer;
-      padding: 4px;
+      padding: 6px;
+      min-width: 36px;
+      min-height: 36px;
     }
     .hamburger span {
       display: block;
-      width: 24px;
+      width: 22px;
       height: 2px;
       background-color: #f0f0f0;
       border-radius: 2px;
-      transition: all 0.3s;
     }
 
     /* HERO */
@@ -161,10 +163,7 @@
       border: 1px solid #2a2a2a;
       position: relative;
     }
-    .plan.featured {
-      border-color: #e8500a;
-      transform: scale(1.03);
-    }
+    .plan.featured { border-color: #e8500a; transform: scale(1.03); }
     .plan.featured::before {
       content: "MÁS POPULAR";
       position: absolute;
@@ -180,22 +179,11 @@
       letter-spacing: 1px;
     }
     .plan h3 { font-size: 1.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-    .plan .price {
-      font-size: 2.8rem;
-      font-weight: 900;
-      color: #e8500a;
-      margin: 1rem 0;
-      line-height: 1;
-    }
+    .plan .price { font-size: 2.8rem; font-weight: 900; color: #e8500a; margin: 1rem 0; line-height: 1; }
     .plan .price sup { font-size: 1.2rem; vertical-align: super; }
     .plan .price sub { font-size: 0.9rem; color: #777; }
     .plan ul { list-style: none; margin: 1.5rem 0; text-align: left; }
-    .plan ul li {
-      padding: 0.45rem 0;
-      color: #bbb;
-      font-size: 0.92rem;
-      border-bottom: 1px solid #2a2a2a;
-    }
+    .plan ul li { padding: 0.45rem 0; color: #bbb; font-size: 0.92rem; border-bottom: 1px solid #2a2a2a; }
     .plan ul li::before { content: "✓ "; color: #e8500a; font-weight: 700; }
 
     /* FOOTER */
@@ -208,20 +196,32 @@
       font-size: 0.88rem;
     }
     footer strong { color: #e8500a; }
+    .footer-contact {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.4rem 1.2rem;
+      margin-top: 0.6rem;
+    }
+    .footer-contact span { white-space: nowrap; }
 
-    /* ── TABLET (≤ 900px) ── */
+    /* ════════════════════════════
+       TABLET  ≤ 900px
+    ════════════════════════════ */
     @media (max-width: 900px) {
       nav { padding: 1rem 2rem; }
       .hero h1 { font-size: 3rem; }
-      .stats { gap: 2rem; }
+      .stats { gap: 2.5rem; }
       .section { padding: 4rem 2rem; }
-      .planes { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
     }
 
-    /* ── MÓVIL (≤ 640px) ── */
+    /* ════════════════════════════
+       MÓVIL  ≤ 640px  (iPhone 13 Pro Max = 428px)
+    ════════════════════════════ */
     @media (max-width: 640px) {
-      /* Nav hamburguesa */
-      nav { padding: 1rem 1.25rem; position: relative; }
+
+      /* — Nav — */
+      nav { padding: 0.85rem 1.2rem; position: relative; }
       .hamburger { display: flex; }
       nav ul {
         display: none;
@@ -233,45 +233,69 @@
         right: 0;
         background-color: #111;
         border-bottom: 2px solid #e8500a;
-        padding: 0.5rem 0;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.5);
       }
       nav ul.open { display: flex; }
       nav ul li a {
         display: block;
-        padding: 0.85rem 1.5rem;
+        padding: 1rem 1.5rem;
         font-size: 1rem;
+        border-bottom: 1px solid #1e1e1e;
       }
 
-      /* Hero */
-      .hero { padding: 4rem 1.25rem; min-height: 75vh; }
-      .hero h1 { font-size: 2.2rem; letter-spacing: 1px; }
-      .hero p { font-size: 1rem; }
-      .btn { padding: 0.8rem 2rem; font-size: 0.95rem; margin-top: 2rem; }
+      /* — Hero — */
+      .hero { padding: 3.5rem 1.2rem; min-height: 65vh; }
+      .hero h1 { font-size: 2.1rem; letter-spacing: 0.5px; }
+      .hero p { font-size: 0.97rem; margin-top: 1rem; }
+      .btn { padding: 0.8rem 2rem; font-size: 0.9rem; margin-top: 1.8rem; }
 
-      /* Stats */
-      .stats { gap: 1.5rem; padding: 2rem 1rem; }
-      .stat h2 { font-size: 2rem; }
+      /* — Stats: grid 2×2 — */
+      .stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        padding: 0;
+      }
+      .stat {
+        padding: 1.5rem 1rem;
+        border-right: 1px solid rgba(255,255,255,0.15);
+        border-bottom: 1px solid rgba(255,255,255,0.15);
+      }
+      .stat:nth-child(2n)   { border-right: none; }
+      .stat:nth-child(3),
+      .stat:nth-child(4)    { border-bottom: none; }
+      .stat h2 { font-size: 1.9rem; }
+      .stat p  { font-size: 0.72rem; }
 
-      /* Secciones */
-      .section { padding: 3rem 1.25rem; }
-      .section-title { font-size: 1.5rem; margin-bottom: 2rem; }
+      /* — Secciones — */
+      .section { padding: 2.8rem 1.2rem; }
+      .section-title { font-size: 1.45rem; margin-bottom: 1.8rem; }
 
-      /* Cards — columna única */
-      .cards { grid-template-columns: 1fr; }
+      /* — Cards — */
+      .cards { grid-template-columns: 1fr; gap: 1rem; }
+      .card { padding: 1.5rem; }
+      .card .icon { font-size: 2rem; }
 
-      /* Planes — columna única, sin scale en featured */
-      .planes { grid-template-columns: 1fr; }
-      .plan.featured { transform: scale(1); margin-top: 1rem; }
+      /* — Planes — */
+      .planes { grid-template-columns: 1fr; gap: 2rem; }
+      .plan { padding: 2rem 1.5rem; }
+      .plan.featured { transform: none; }
+      .plan.featured::before { font-size: 0.7rem; }
 
-      /* Footer */
-      footer { font-size: 0.8rem; padding: 2rem 1rem; line-height: 1.8; }
+      /* — Footer — */
+      footer { padding: 2rem 1.2rem; font-size: 0.82rem; }
+      .footer-contact { flex-direction: column; gap: 0.35rem; align-items: center; }
     }
 
-    /* ── MÓVIL MUY PEQUEÑO (≤ 380px) ── */
-    @media (max-width: 380px) {
-      .hero h1 { font-size: 1.8rem; }
+    /* ════════════════════════════
+       MÓVIL PEQUEÑO  ≤ 390px
+    ════════════════════════════ */
+    @media (max-width: 390px) {
       .logo { font-size: 1.3rem; }
-      .stat h2 { font-size: 1.7rem; }
+      .hero h1 { font-size: 1.75rem; }
+      .hero p { font-size: 0.9rem; }
+      .stat h2 { font-size: 1.6rem; }
+      .section-title { font-size: 1.3rem; }
     }
   </style>
 </head>
@@ -377,7 +401,11 @@
   <!-- FOOTER -->
   <footer id="contacto">
     <p><strong>WilchesFitness</strong> &mdash; Tu mejor versión empieza hoy.</p>
-    <p style="margin-top:0.5rem;">📍 Bogotá, Colombia &nbsp;|&nbsp; 📞 +57 300 000 0000 &nbsp;|&nbsp; ✉️ info@wilchesfitness.com</p>
+    <div class="footer-contact">
+      <span>📍 Bogotá, Colombia</span>
+      <span>📞 +57 300 000 0000</span>
+      <span>✉️ info@wilchesfitness.com</span>
+    </div>
     <p style="margin-top:1rem;">&copy; 2026 WilchesFitness. Todos los derechos reservados.</p>
   </footer>
 
