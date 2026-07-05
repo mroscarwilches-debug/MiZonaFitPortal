@@ -22,7 +22,7 @@ Prerequisite: the site running on `:8080` (previous section).
 
 ```bash
 docker run --rm --add-host=host.docker.internal:host-gateway ^
-  -v "D:\Cloud Engineer\Git\MiZonaFitPortal:/repo" -w /repo ^
+  -v "D:\Cloud Engineer\Git\warrior-code-portal:/repo" -w /repo ^
   -e BASE_URL=http://host.docker.internal:8080 ^
   mcr.microsoft.com/playwright:v1.53.0-noble ^
   sh -c "npm install && npm test"
@@ -56,8 +56,8 @@ Open Graph JPEG into `app/html/assets/img/`:
 ```bash
 docker run --rm ^
   -v "F:\MiZonaFit:/src" ^
-  -v "D:\Cloud Engineer\Git\MiZonaFitPortal\app\html\assets\img:/out" ^
-  -v "D:\Cloud Engineer\Git\MiZonaFitPortal\tools:/tools" ^
+  -v "D:\Cloud Engineer\Git\warrior-code-portal\app\html\assets\img:/out" ^
+  -v "D:\Cloud Engineer\Git\warrior-code-portal\tools:/tools" ^
   -w /work node:22-bookworm-slim ^
   sh -c "cp /tools/optimize-images.mjs . && npm install sharp && node optimize-images.mjs"
 ```
