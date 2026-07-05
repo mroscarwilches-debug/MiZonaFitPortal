@@ -27,6 +27,35 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
+// ── Plans carousel ─────────────────────────────────────────────────
+const track = document.getElementById('plans-track');
+const prevBtn = document.getElementById('plans-prev');
+const nextBtn = document.getElementById('plans-next');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// One card width + gap = one navigation step
+function carouselStep() {
+  const card = track.querySelector('.plan');
+  const gap = parseFloat(getComputedStyle(track).columnGap) || 16;
+  return card.getBoundingClientRect().width + gap;
+}
+
+function updateCarouselButtons() {
+  const maxScroll = track.scrollWidth - track.clientWidth;
+  prevBtn.disabled = track.scrollLeft <= 1;
+  nextBtn.disabled = track.scrollLeft >= maxScroll - 1;
+}
+
+prevBtn.addEventListener('click', () => {
+  track.scrollBy({ left: -carouselStep(), behavior: reduceMotion ? 'auto' : 'smooth' });
+});
+nextBtn.addEventListener('click', () => {
+  track.scrollBy({ left: carouselStep(), behavior: reduceMotion ? 'auto' : 'smooth' });
+});
+track.addEventListener('scroll', updateCarouselButtons, { passive: true });
+window.addEventListener('resize', updateCarouselButtons);
+updateCarouselButtons();
+
 // ── Contact form ───────────────────────────────────────────────────
 // The endpoint comes from the form's data-endpoint attribute.
 // Empty endpoint = local/dev mode: validate and show success without
