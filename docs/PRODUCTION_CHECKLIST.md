@@ -32,11 +32,14 @@ Items marked ✅ are already done and verified locally.
 
 ## Go-live commit (see docs/DEPLOYMENT.md)
 
-- [ ] Remove `noindex` meta tag
-- [ ] Canonical URL + absolute `og:image`
-- [ ] `robots.txt` (+ optional `sitemap.xml`)
-- [ ] Contact form endpoint configured (or consciously left in local mode)
+- [x] `noindex` meta tag removed (2026-07-04)
+- [x] `robots.txt` allowing indexing (2026-07-04)
+- [ ] Canonical URL + absolute `og:image` — needs the final domain/IP,
+      do right after first deploy
+- [ ] Contact form endpoint configured (or consciously left in local
+      acknowledge-only mode)
 - [ ] CSP updated if the form endpoint is external
+- [ ] `git push` to `main` with CI green (the instance deploys from GitHub)
 
 ## Security pre-flight (see docs/SECURITY.md)
 

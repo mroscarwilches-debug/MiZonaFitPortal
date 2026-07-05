@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>El Código del Guerrero — Entrenamiento personalizado by Mr. Wilches</title>
   <meta name="description" content="El Código del Guerrero by Mr. Wilches: entrenamiento personalizado, nutrición deportiva y disciplina para transformar tu cuerpo y tu mente. Bogotá, Colombia." />
-  <!-- Remove noindex at go-live: the site is private during development -->
-  <meta name="robots" content="noindex, nofollow" />
   <meta name="theme-color" content="#0d0d0d" />
 
   <!-- Open Graph / social sharing -->
@@ -17,7 +15,10 @@
   <meta property="og:locale" content="es_CO" />
 
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-  <link rel="preload" as="image" href="assets/img/hero-1080.avif" type="image/avif" media="(min-width: 641px)" />
+  <!-- imagesrcset mirrors the hero <source> so the preload never mismatches -->
+  <link rel="preload" as="image" type="image/avif"
+        imagesrcset="assets/img/hero-640.avif 640w, assets/img/hero-1080.avif 1080w, assets/img/hero-1600.avif 1600w"
+        imagesizes="100vw" />
   <link rel="stylesheet" href="css/main.css" />
 </head>
 <body>
