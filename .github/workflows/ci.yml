@@ -1,0 +1,98 @@
+# Continuous integration: code quality + Docker image verification.
+# This workflow NEVER provisions infrastructure and NEVER deploys.
+# Terraform plan/apply is a manual, local, owner-only procedure: docs/DEPLOYMENT.md.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  unit-tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test:unit
+
+  docker-e2e:
+    name: Docker build + E2E/accessibility
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: app/Dockerfile
+
+      - name: Build production image
+        run: docker build -t warrior-code-web:ci app/
+
+      - name: Run container
+        run: docker run -d --name web -p 8080:80 warrior-code-web:ci
+
+      - name: Smoke test and security headers
+        run: |
+          sleep 3
+          curl -fsS -o /dev/null http://localhost:8080/
+          headers=$(curl -fsSI http://localhost:8080/)
+          for h in "Content-Security-Policy" "X-Content-Type-Options" "X-Frame-Options" "Referrer-Policy" "Permissions-Policy"; do
+            echo "$headers" | grep -qi "$h" || { echo "MISSING HEADER: $h"; exit 1; }
+          done
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E + accessibility tests against the built image
+        run: npm run test:e2e
+        env:
+          BASE_URL: http://localhost:8080
+
+      - name: Container logs on failure
+        if: failure()
+        run: docker logs web
+
+  terraform-validate:
+    name: Terraform validate (no apply)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.5"
+
+      - name: Terraform fmt check
+        run: terraform fmt -check -recursive
+        working-directory: terraform
+
+      # -backend=false: validation must not touch remote state or need credentials
+      - name: Terraform validate
+        run: |
+          terraform init -backend=false -input=false
+          terraform validate
+        working-directory: terraform

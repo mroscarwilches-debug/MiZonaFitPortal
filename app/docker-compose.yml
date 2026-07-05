@@ -1,7 +1,15 @@
+# Local runtime — identical image to production.
+# Single command to run the site: docker compose up --build
+# Default port 8080; production hosts map 80 via WEB_PORT=80.
 services:
   web:
     build: .
-    container_name: wilchesfitness
+    container_name: warrior-code-web
     ports:
-      - "80:80"
+      - "${WEB_PORT:-8080}:80"
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

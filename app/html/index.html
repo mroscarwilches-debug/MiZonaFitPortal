@@ -3,408 +3,151 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WilchesFitness</title>
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  <title>El Código del Guerrero — Entrenamiento personalizado by Mr. Wilches</title>
+  <meta name="description" content="El Código del Guerrero by Mr. Wilches: entrenamiento personalizado, nutrición deportiva y disciplina para transformar tu cuerpo y tu mente. Bogotá, Colombia." />
+  <!-- Remove noindex at go-live: the site is private during development -->
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#0d0d0d" />
 
-    :root {
-      --naranja:      #e8500a;
-      --naranja-dark: #c4400a;
-      --fondo:        #0d0d0d;
-      --fondo-card:   #1a1a1a;
-      --fondo-nav:    #111111;
-      --texto:        #f0f0f0;
-      --muted:        #999999;
-      --borde:        #2a2a2a;
-    }
+  <!-- Open Graph / social sharing -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="El Código del Guerrero — by Mr. Wilches" />
+  <meta property="og:description" content="Entrenamiento personalizado, nutrición y disciplina para transformar tu cuerpo y tu mente. Resultados reales." />
+  <meta property="og:image" content="assets/img/og-image.jpg" />
+  <meta property="og:locale" content="es_CO" />
 
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--fondo);
-      color: var(--texto);
-      overflow-x: hidden;
-    }
-
-    /* ──────────────────────────────
-       NAV  —  base = móvil
-    ────────────────────────────── */
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.85rem 1.2rem;
-      background-color: var(--fondo-nav);
-      position: sticky;
-      top: 0;
-      z-index: 200;
-      border-bottom: 2px solid var(--naranja);
-    }
-    .logo {
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: var(--naranja);
-      letter-spacing: 0.5px;
-      flex-shrink: 0;
-    }
-    .logo span { color: var(--texto); }
-
-    /* Menú hamburguesa — visible solo en móvil */
-    .hamburger {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 5px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      min-width: 44px;
-      min-height: 44px;
-    }
-    .hamburger span {
-      display: block;
-      width: 22px;
-      height: 2px;
-      background-color: var(--texto);
-      border-radius: 2px;
-    }
-
-    /* Links del nav — colapsados en móvil */
-    nav ul {
-      list-style: none;
-      display: none;
-      flex-direction: column;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background-color: var(--fondo-nav);
-      border-bottom: 2px solid var(--naranja);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-      z-index: 199;
-    }
-    nav ul.open { display: flex; }
-    nav ul li a {
-      display: block;
-      padding: 1rem 1.5rem;
-      color: #ccc;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 1rem;
-      border-bottom: 1px solid #1e1e1e;
-    }
-    nav ul li:last-child a { border-bottom: none; }
-    nav ul li a:active { color: var(--naranja); background: #161616; }
-
-    /* ──────────────────────────────
-       HERO  —  base = móvil
-    ────────────────────────────── */
-    .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 3.5rem 1.2rem;
-      background: linear-gradient(160deg, #111 55%, #1a0a00);
-      min-height: 60vh;
-    }
-    .hero h1 {
-      font-size: 2rem;
-      font-weight: 900;
-      line-height: 1.15;
-      text-transform: uppercase;
-      letter-spacing: 0px;
-      word-break: break-word;
-    }
-    .hero h1 span { color: var(--naranja); }
-    .hero p {
-      margin-top: 1rem;
-      font-size: 0.97rem;
-      color: #aaa;
-      line-height: 1.6;
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 1.8rem;
-      padding: 0.85rem 2rem;
-      min-height: 44px;
-      background-color: var(--naranja);
-      color: #fff;
-      font-size: 0.95rem;
-      font-weight: 700;
-      border-radius: 4px;
-      text-decoration: none;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      transition: background 0.2s;
-    }
-    .btn:active { background-color: var(--naranja-dark); }
-
-    /* ──────────────────────────────
-       STATS  —  base = móvil (2×2)
-    ────────────────────────────── */
-    .stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      background-color: var(--naranja);
-    }
-    .stat {
-      text-align: center;
-      padding: 1.4rem 0.8rem;
-      border-right:  1px solid rgba(255,255,255,0.2);
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-    }
-    .stat:nth-child(2n) { border-right: none; }
-    .stat:nth-child(3),
-    .stat:nth-child(4)  { border-bottom: none; }
-    .stat h2 { font-size: 1.8rem; font-weight: 900; color: #fff; }
-    .stat p  { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; color: #ffe0d0; margin-top: 3px; }
-
-    /* ──────────────────────────────
-       SECCIONES  —  base = móvil
-    ────────────────────────────── */
-    .section {
-      padding: 2.8rem 1.2rem;
-      max-width: 1100px;
-      margin: 0 auto;
-      width: 100%;
-    }
-    .section-title {
-      text-align: center;
-      font-size: 1.5rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      margin-bottom: 1.8rem;
-      letter-spacing: 0.5px;
-    }
-    .section-title span { color: var(--naranja); }
-
-    /* CARDS */
-    .cards {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-    .card {
-      background-color: var(--fondo-card);
-      border-radius: 8px;
-      padding: 1.5rem;
-      border-top: 3px solid var(--naranja);
-    }
-    .card .icon { font-size: 2rem; margin-bottom: 0.75rem; display: block; }
-    .card h3    { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; text-transform: uppercase; }
-    .card p     { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
-
-    /* PLANES */
-    .planes-bg { background-color: var(--fondo-nav); }
-    .planes {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.8rem;
-      padding-top: 0.8rem;
-    }
-    .plan {
-      background-color: var(--fondo-card);
-      border-radius: 8px;
-      padding: 2rem 1.5rem;
-      text-align: center;
-      border: 1px solid var(--borde);
-      position: relative;
-    }
-    .plan.featured { border-color: var(--naranja); margin-top: 0.8rem; }
-    .plan.featured::before {
-      content: "MÁS POPULAR";
-      position: absolute;
-      top: -13px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--naranja);
-      color: #fff;
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 3px 12px;
-      border-radius: 20px;
-      white-space: nowrap;
-    }
-    .plan h3        { font-size: 1.1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
-    .plan .price    { font-size: 2.5rem; font-weight: 900; color: var(--naranja); margin: 0.8rem 0; line-height: 1; }
-    .plan .price sup { font-size: 1rem; vertical-align: super; }
-    .plan .price sub { font-size: 0.85rem; color: #777; }
-    .plan ul        { list-style: none; margin: 1.2rem 0; text-align: left; }
-    .plan ul li     { padding: 0.5rem 0; color: #bbb; font-size: 0.9rem; border-bottom: 1px solid var(--borde); }
-    .plan ul li::before { content: "✓ "; color: var(--naranja); font-weight: 700; }
-    .plan .btn      { width: 100%; margin-top: 0.5rem; }
-
-    /* FOOTER */
-    footer {
-      background-color: #0a0a0a;
-      text-align: center;
-      padding: 2rem 1.2rem;
-      border-top: 2px solid #1a1a1a;
-      color: #555;
-      font-size: 0.82rem;
-      line-height: 1.6;
-    }
-    footer strong { color: var(--naranja); }
-    .footer-contact {
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
-      align-items: center;
-      margin-top: 0.5rem;
-    }
-
-    /* ══════════════════════════════════════
-       TABLET  ≥ 640px
-    ══════════════════════════════════════ */
-    @media (min-width: 640px) {
-      nav { padding: 1rem 2rem; }
-      .logo { font-size: 1.55rem; letter-spacing: 1px; }
-
-      /* Nav horizontal */
-      .hamburger { display: none; }
-      nav ul {
-        display: flex !important;
-        flex-direction: row;
-        position: static;
-        background: none;
-        border: none;
-        box-shadow: none;
-        gap: 2rem;
-      }
-      nav ul li a {
-        padding: 0;
-        border: none;
-        font-size: 0.95rem;
-        transition: color 0.2s;
-      }
-      nav ul li a:hover   { color: var(--naranja); }
-      nav ul li a:active  { background: none; }
-
-      .hero { padding: 5rem 2rem; min-height: 75vh; }
-      .hero h1 { font-size: 3rem; letter-spacing: 1px; }
-      .hero p  { font-size: 1.1rem; max-width: 520px; margin-top: 1.2rem; }
-      .btn     { padding: 0.9rem 2.5rem; font-size: 1rem; margin-top: 2rem; }
-
-      /* Stats: fila horizontal en tablet */
-      .stats {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 2.5rem;
-        padding: 2.5rem 2rem;
-      }
-      .stat { border: none; padding: 0; }
-      .stat h2 { font-size: 2.2rem; }
-      .stat p  { font-size: 0.8rem; }
-
-      .section       { padding: 4rem 2rem; }
-      .section-title { font-size: 1.8rem; margin-bottom: 2.5rem; }
-
-      .cards { grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
-      .card  { padding: 1.8rem; }
-
-      .planes { grid-template-columns: minmax(0, 420px); justify-content: center; gap: 1.5rem; }
-      .plan.featured { transform: none; }
-
-      .footer-contact { flex-direction: row; flex-wrap: wrap; gap: 0.4rem 1.2rem; justify-content: center; }
-    }
-
-    /* ══════════════════════════════════════
-       ESCRITORIO  ≥ 1024px
-    ══════════════════════════════════════ */
-    @media (min-width: 1024px) {
-      nav  { padding: 1rem 3rem; }
-      .logo { font-size: 1.6rem; }
-
-      .hero    { padding: 6rem 2rem; min-height: 90vh; }
-      .hero h1 { font-size: 4rem; letter-spacing: 2px; }
-      .hero p  { font-size: 1.2rem; }
-      .btn     { margin-top: 2.5rem; }
-
-      .stats   { gap: 4rem; padding: 3rem 2rem; }
-      .stat h2 { font-size: 2.5rem; }
-      .stat p  { font-size: 0.85rem; }
-
-      .section       { padding: 5rem 3rem; }
-      .section-title { font-size: 2rem; margin-bottom: 3rem; }
-
-      .cards { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
-      .card:hover { transform: translateY(-4px); transition: transform 0.2s; }
-
-      .planes { grid-template-columns: repeat(3, 1fr); justify-content: initial; max-width: 100%; }
-      .plan.featured { transform: scale(1.03); }
-    }
-  </style>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="preload" as="image" href="assets/img/hero-1080.avif" type="image/avif" media="(min-width: 641px)" />
+  <link rel="stylesheet" href="css/main.css" />
 </head>
 <body>
 
-  <nav>
-    <div class="logo">Wilches<span>Fitness</span></div>
+  <a class="skip-link" href="#main">Ir al contenido principal</a>
+
+  <nav aria-label="Navegación principal">
+    <a class="logo" href="#main" aria-label="El Código del Guerrero — inicio">El Código del <span>Guerrero</span></a>
     <ul id="nav-menu">
-      <li><a href="#servicios" onclick="cerrarMenu()">Servicios</a></li>
-      <li><a href="#planes"    onclick="cerrarMenu()">Planes</a></li>
-      <li><a href="#contacto"  onclick="cerrarMenu()">Contacto</a></li>
+      <li><a href="#metodo">El Método</a></li>
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#planes">Planes</a></li>
+      <li><a href="#contacto">Contacto</a></li>
     </ul>
-    <button class="hamburger" onclick="toggleMenu()" aria-label="Abrir menú">
+    <button id="nav-toggle" class="hamburger" aria-label="Abrir menú" aria-controls="nav-menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </nav>
 
-  <!-- HERO -->
-  <section class="hero">
-    <h1>Transforma tu <span>cuerpo y mente</span></h1>
-    <p>Entrenamiento personalizado, nutrición y bienestar para alcanzar tus metas con disciplina y resultados reales.</p>
-    <a href="#planes" class="btn">Ver planes</a>
-  </section>
+  <main id="main">
 
-  <!-- STATS -->
-  <div class="stats">
-    <div class="stat"><h2>+500</h2><p>Miembros activos</p></div>
-    <div class="stat"><h2>10+</h2><p>Años de experiencia</p></div>
-    <div class="stat"><h2>15</h2><p>Entrenadores certificados</p></div>
-    <div class="stat"><h2>98%</h2><p>Satisfacción</p></div>
-  </div>
-
-  <!-- SERVICIOS -->
-  <div id="servicios">
-    <div class="section">
-      <h2 class="section-title">Nuestros <span>Servicios</span></h2>
-      <div class="cards">
-        <div class="card">
-          <span class="icon">🏋️</span>
-          <h3>Entrenamiento de fuerza</h3>
-          <p>Programas de pesas diseñados por expertos para ganar músculo y mejorar tu composición corporal.</p>
-        </div>
-        <div class="card">
-          <span class="icon">🏃</span>
-          <h3>Cardio & HIIT</h3>
-          <p>Sesiones de alta intensidad que queman grasa y mejoran tu resistencia cardiovascular.</p>
-        </div>
-        <div class="card">
-          <span class="icon">🥗</span>
-          <h3>Nutrición deportiva</h3>
-          <p>Asesoría nutricional personalizada para complementar tu entrenamiento y maximizar resultados.</p>
-        </div>
-        <div class="card">
-          <span class="icon">🧘</span>
-          <h3>Yoga & Movilidad</h3>
-          <p>Clases para mejorar flexibilidad, reducir el estrés y acelerar la recuperación muscular.</p>
+    <!-- HERO -->
+    <section class="hero">
+      <picture class="hero-bg" aria-hidden="true">
+        <source type="image/avif" srcset="assets/img/hero-640.avif 640w, assets/img/hero-1080.avif 1080w, assets/img/hero-1600.avif 1600w" sizes="100vw" />
+        <source type="image/webp" srcset="assets/img/hero-640.webp 640w, assets/img/hero-1080.webp 1080w, assets/img/hero-1600.webp 1600w" sizes="100vw" />
+        <img src="assets/img/hero-1080.webp" alt="" width="1080" height="1620" fetchpriority="high" />
+      </picture>
+      <div class="hero-content">
+        <p class="hero-kicker">by Mr. Wilches</p>
+        <h1>El Código del <span>Guerrero</span></h1>
+        <p>Entrenamiento personalizado, nutrición y disciplina para transformar tu cuerpo y tu mente. Resultados reales.</p>
+        <div class="hero-actions">
+          <a href="#planes" class="btn">Ver planes</a>
+          <a href="#metodo" class="btn btn-secondary">Conoce el método</a>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- PLANES -->
-  <div id="planes" class="planes-bg">
-    <div class="section">
-      <h2 class="section-title">Elige tu <span>Plan</span></h2>
-      <div class="planes">
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stat"><h2>+500</h2><p>Miembros activos</p></div>
+      <div class="stat"><h2>10+</h2><p>Años de experiencia</p></div>
+      <div class="stat"><h2>15</h2><p>Entrenadores certificados</p></div>
+      <div class="stat"><h2>98%</h2><p>Satisfacción</p></div>
+    </div>
+
+    <!-- METHOD -->
+    <section id="metodo" class="section" aria-labelledby="method-title">
+      <h2 id="method-title" class="section-title">El <span>Método</span></h2>
+      <div class="method">
+        <picture>
+          <source type="image/avif" srcset="assets/img/coach-480.avif 480w, assets/img/coach-960.avif 960w" sizes="(min-width: 640px) 40vw, 100vw" />
+          <source type="image/webp" srcset="assets/img/coach-480.webp 480w, assets/img/coach-960.webp 960w" sizes="(min-width: 640px) 40vw, 100vw" />
+          <img src="assets/img/coach-960.webp" alt="Mr. Wilches entrenando con disciplina en el gimnasio" width="960" height="1440" loading="lazy" />
+        </picture>
+        <div class="method-text">
+          <h3>Un código. Una disciplina. Tu mejor versión.</h3>
+          <p>El Código del Guerrero no es una rutina más: es un sistema de entrenamiento, nutrición y mentalidad diseñado por Mr. Wilches para que cada sesión te acerque a tu objetivo.</p>
+          <ul class="method-pillars">
+            <li><strong>Disciplina:</strong> hábitos que se sostienen en el tiempo.</li>
+            <li><strong>Entrenamiento inteligente:</strong> programas a tu medida, no plantillas.</li>
+            <li><strong>Nutrición real:</strong> comes para rendir, no para sufrir.</li>
+            <li><strong>Mentalidad:</strong> la fuerza empieza en la cabeza.</li>
+          </ul>
+          <a href="#contacto" class="btn">Empieza hoy</a>
+        </div>
+      </div>
+
+      <div class="gallery">
+        <figure class="gallery-item">
+          <picture>
+            <source type="image/avif" srcset="assets/img/training-480.avif 480w, assets/img/training-960.avif 960w" sizes="(min-width: 640px) 33vw, 100vw" />
+            <source type="image/webp" srcset="assets/img/training-480.webp 480w, assets/img/training-960.webp 960w" sizes="(min-width: 640px) 33vw, 100vw" />
+            <img src="assets/img/training-960.webp" alt="Entrenamiento personalizado uno a uno con corrección de técnica" width="960" height="1440" loading="lazy" />
+          </picture>
+          <figcaption>Entrenamiento 1 a 1</figcaption>
+        </figure>
+        <figure class="gallery-item">
+          <picture>
+            <source type="image/avif" srcset="assets/img/nutrition-480.avif 480w, assets/img/nutrition-960.avif 960w" sizes="(min-width: 640px) 33vw, 100vw" />
+            <source type="image/webp" srcset="assets/img/nutrition-480.webp 480w, assets/img/nutrition-960.webp 960w" sizes="(min-width: 640px) 33vw, 100vw" />
+            <img src="assets/img/nutrition-960.webp" alt="Asesoría en nutrición y suplementación deportiva" width="960" height="1440" loading="lazy" />
+          </picture>
+          <figcaption>Nutrición y suplementación</figcaption>
+        </figure>
+        <figure class="gallery-item">
+          <picture>
+            <source type="image/avif" srcset="assets/img/team-480.avif 480w, assets/img/team-960.avif 960w" sizes="(min-width: 640px) 33vw, 100vw" />
+            <source type="image/webp" srcset="assets/img/team-480.webp 480w, assets/img/team-960.webp 960w" sizes="(min-width: 640px) 33vw, 100vw" />
+            <img src="assets/img/team-960.webp" alt="Comunidad de entrenamiento El Código del Guerrero" width="960" height="1440" loading="lazy" />
+          </picture>
+          <figcaption>Comunidad guerrera</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <div class="services-bg">
+      <section id="servicios" class="section" aria-labelledby="services-title">
+        <h2 id="services-title" class="section-title">Nuestros <span>Servicios</span></h2>
+        <div class="cards">
+          <div class="card">
+            <span class="icon" aria-hidden="true">🏋️</span>
+            <h3>Entrenamiento de fuerza</h3>
+            <p>Programas de pesas diseñados por expertos para ganar músculo y mejorar tu composición corporal.</p>
+          </div>
+          <div class="card">
+            <span class="icon" aria-hidden="true">🏃</span>
+            <h3>Cardio &amp; HIIT</h3>
+            <p>Sesiones de alta intensidad que queman grasa y mejoran tu resistencia cardiovascular.</p>
+          </div>
+          <div class="card">
+            <span class="icon" aria-hidden="true">🥗</span>
+            <h3>Nutrición deportiva</h3>
+            <p>Asesoría nutricional personalizada para complementar tu entrenamiento y maximizar resultados.</p>
+          </div>
+          <div class="card">
+            <span class="icon" aria-hidden="true">🧘</span>
+            <h3>Yoga &amp; Movilidad</h3>
+            <p>Clases para mejorar flexibilidad, reducir el estrés y acelerar la recuperación muscular.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- PLANS -->
+    <section id="planes" class="section" aria-labelledby="plans-title">
+      <h2 id="plans-title" class="section-title">Elige tu <span>Plan</span></h2>
+      <div class="plans">
         <div class="plan">
           <h3>Básico</h3>
           <div class="price"><sup>$</sup>29<sub>/mes</sub></div>
@@ -438,28 +181,53 @@
           <a href="#contacto" class="btn">Empezar</a>
         </div>
       </div>
+    </section>
+
+    <!-- CONTACT -->
+    <div class="contact-bg">
+      <section id="contacto" class="section" aria-labelledby="contact-title">
+        <h2 id="contact-title" class="section-title">Hablemos de tu <span>Objetivo</span></h2>
+        <form id="contact-form" class="contact-form" data-endpoint="" novalidate>
+          <div class="form-field">
+            <label for="field-name">Nombre</label>
+            <input id="field-name" name="name" type="text" autocomplete="name" required aria-describedby="error-name" />
+            <p id="error-name" class="field-error" role="alert"></p>
+          </div>
+          <div class="form-field">
+            <label for="field-email">Correo electrónico</label>
+            <input id="field-email" name="email" type="email" autocomplete="email" required aria-describedby="error-email" />
+            <p id="error-email" class="field-error" role="alert"></p>
+          </div>
+          <div class="form-field">
+            <label for="field-message">¿Cuál es tu meta?</label>
+            <textarea id="field-message" name="message" rows="5" required aria-describedby="error-message"></textarea>
+            <p id="error-message" class="field-error" role="alert"></p>
+          </div>
+          <!-- Honeypot: hidden from humans, bots fill it -->
+          <div class="form-field visually-hidden" aria-hidden="true">
+            <label for="field-company">No llenar este campo</label>
+            <input id="field-company" name="company" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <button type="submit" class="btn">Enviar mensaje</button>
+          <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
     </div>
-  </div>
+
+  </main>
 
   <!-- FOOTER -->
-  <footer id="contacto">
-    <p><strong>WilchesFitness</strong> &mdash; Tu mejor versión empieza hoy.</p>
+  <footer>
+    <p><strong>El Código del Guerrero</strong> &mdash; by Mr. Wilches. Tu mejor versión empieza hoy.</p>
     <div class="footer-contact">
       <span>📍 Bogotá, Colombia</span>
-      <span>📞 +57 300 000 0000</span>
-      <span>✉️ info@wilchesfitness.com</span>
+      <a href="tel:+573000000000">📞 +57 300 000 0000</a>
+      <a href="mailto:info@wilchesfitness.com">✉️ info@wilchesfitness.com</a>
     </div>
-    <p style="margin-top:1rem;">&copy; 2026 WilchesFitness. Todos los derechos reservados.</p>
+    <p class="copyright">&copy; 2026 El Código del Guerrero. Todos los derechos reservados.</p>
   </footer>
 
-  <script>
-    function toggleMenu() {
-      document.getElementById('nav-menu').classList.toggle('open');
-    }
-    function cerrarMenu() {
-      document.getElementById('nav-menu').classList.remove('open');
-    }
-  </script>
+  <script type="module" src="js/main.js"></script>
 
 </body>
 </html>

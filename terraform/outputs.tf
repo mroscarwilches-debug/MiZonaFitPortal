@@ -1,9 +1,14 @@
-output "instancia_ip_publica" {
-  description = "IP publica de la instancia EC2"
-  value       = aws_instance.example.public_ip
+output "instance_public_ip" {
+  description = "Public IP of the EC2 instance"
+  value       = aws_instance.web.public_ip
 }
 
 output "portal_url" {
-  description = "URL del portal web"
-  value       = "http://${aws_instance.example.public_ip}"
+  description = "Web portal URL"
+  value       = "http://${aws_instance.web.public_ip}"
+}
+
+output "ssh_command" {
+  description = "SSH command for the admin"
+  value       = "ssh -i <path-to-${var.key_name}.pem> ubuntu@${aws_instance.web.public_ip}"
 }

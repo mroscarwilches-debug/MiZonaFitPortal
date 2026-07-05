@@ -15,7 +15,6 @@ terraform {
 
 provider "aws" {
   region = "us-east-1"
-  # Se recomienda usar variables de entorno para credenciales
-  # access_key = "TU_ACCESS_KEY"
-  # secret_key = "TU_SECRET_KEY"
+  # Credentials come from the environment (aws configure / env vars).
+  # Never hardcode keys in this file.
 }
