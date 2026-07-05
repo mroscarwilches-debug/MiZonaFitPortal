@@ -48,14 +48,14 @@ while local (see docs/PRODUCTION_CHECKLIST.md).
 
 ## Regenerating images
 
-Curated originals live outside the repo (`F:\MiZonaFit\FOTOESTUDIO21082024`).
-The pipeline (`tools/optimize-images.mjs`) maps slugs to source files and emits
-AVIF/WebP responsive variants plus the Open Graph JPEG into
-`app/html/assets/img/`:
+Curated originals live outside the repo under `F:\MiZonaFit` (multiple photo
+shoots). The pipeline (`tools/optimize-images.mjs`) maps slugs to source files
+(paths relative to that root) and emits AVIF/WebP responsive variants plus the
+Open Graph JPEG into `app/html/assets/img/`:
 
 ```bash
 docker run --rm ^
-  -v "F:\MiZonaFit\FOTOESTUDIO21082024:/src" ^
+  -v "F:\MiZonaFit:/src" ^
   -v "D:\Cloud Engineer\Git\MiZonaFitPortal\app\html\assets\img:/out" ^
   -v "D:\Cloud Engineer\Git\MiZonaFitPortal\tools:/tools" ^
   -w /work node:22-bookworm-slim ^

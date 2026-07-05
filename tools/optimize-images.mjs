@@ -9,13 +9,13 @@ import sharp from 'sharp';
 const SRC_DIR = process.env.SRC_DIR ?? '/src';
 const OUT_DIR = process.env.OUT_DIR ?? '/out';
 
-// slug → { file, widths }
+// slug → { file, widths }. Paths are relative to SRC_DIR (F:\MiZonaFit).
 const IMAGES = {
-  hero:      { file: 'Wilches team-01488.jpg', widths: [640, 1080, 1600] },
-  coach:     { file: 'Wilches team-01539.jpg', widths: [480, 960] },
-  training:  { file: 'Wilches team-01219.jpg', widths: [480, 960] },
-  nutrition: { file: 'Wilches team-01394.jpg', widths: [480, 960] },
-  team:      { file: 'Wilches team-02078.jpg', widths: [480, 960] },
+  hero:      { file: 'FOTOESTUDIO21082024/Wilches team-01045.jpg', widths: [640, 1080, 1600] },
+  coach:     { file: 'FOTOESTUDIO08-05-23/Editadas/_DSC2111.jpg', widths: [480, 960] },
+  training:  { file: 'FOTOESTUDIO21082024/Wilches team-01219.jpg', widths: [480, 960] },
+  nutrition: { file: 'FOTOESTUDIO21082024/Wilches team-02309.jpg', widths: [480, 960] },
+  team:      { file: 'FOTOESTUDIO21082024/Wilches team-02178.jpg', widths: [480, 960] },
 };
 
 const FORMATS = [
@@ -26,7 +26,7 @@ const FORMATS = [
 mkdirSync(OUT_DIR, { recursive: true });
 
 // Social sharing image: JPEG for maximum platform compatibility
-const OG = { file: 'Wilches team-01488.jpg', width: 1200, height: 630 };
+const OG = { file: 'FOTOESTUDIO21082024/Wilches team-01045.jpg', width: 1200, height: 630 };
 {
   const info = await sharp(path.join(SRC_DIR, OG.file))
     .rotate()
