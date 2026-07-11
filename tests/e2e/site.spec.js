@@ -13,7 +13,7 @@ test.describe('page structure', () => {
     for (const id of ['metodo', 'servicios', 'planes', 'contacto']) {
       await expect(page.locator(`#${id}`)).toBeAttached();
     }
-    await expect(page.locator('.plan')).toHaveCount(3);
+    await expect(page.locator('.plan')).toHaveCount(4);
     await expect(page.locator('.card')).toHaveCount(4);
   });
 
@@ -55,6 +55,34 @@ test.describe('navigation', () => {
     await page.goto('/');
     await expect(page.locator('#nav-toggle')).toBeHidden();
     await expect(page.locator('#nav-menu')).toBeVisible();
+  });
+});
+
+test.describe('plans carousel', () => {
+  test('arrows reveal the last plan and return to the first', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('#planes').scrollIntoViewIfNeeded();
+    const next = page.locator('#plans-next');
+    const prev = page.locator('#plans-prev');
+    const plans = page.locator('.plan');
+
+    await expect(prev).toBeDisabled();
+
+    // Advance until the end (bounded to avoid an infinite loop)
+    for (let i = 0; i < 6 && !(await next.isDisabled()); i++) {
+      await next.click();
+      await page.waitForTimeout(500);
+    }
+    await expect(next).toBeDisabled();
+    await expect(plans.last()).toBeInViewport();
+
+    // Go back to the start
+    for (let i = 0; i < 6 && !(await prev.isDisabled()); i++) {
+      await prev.click();
+      await page.waitForTimeout(500);
+    }
+    await expect(prev).toBeDisabled();
+    await expect(plans.first()).toBeInViewport();
   });
 });
 

@@ -1,4 +1,4 @@
-# Architecture Proposal — MiZonaFitPortal
+# Architecture Proposal — Warrior Code Portal
 
 Date: 2026-07-04
 

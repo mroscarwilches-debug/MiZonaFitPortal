@@ -25,19 +25,19 @@ Estimated cost: **~$12–14/month** (instance + disk + public IPv4).
 - EC2 key pair `WilchesFitness` exists in us-east-1 and you have the `.pem`
 - Remote state bucket `wilchesfitness-tfstate` exists (S3, versioned)
 
-## Step 0 — Pre-publish commit (content go-live)
+## Step 0 — Push to GitHub (required)
 
-Make one final commit before deploying publicly:
+**The instance clones `main` from GitHub at boot** — whatever is on GitHub is
+what goes live. Before applying:
 
-1. `app/html/index.html`: remove
-   `<meta name="robots" content="noindex, nofollow" />`.
-2. Add `<link rel="canonical" href="http://<domain-or-ip>/" />` and make
-   `og:image` an absolute URL (once the final address is known).
-3. Replace placeholder phone/email in the footer with real ones.
-4. Confirm plan prices. Optionally add `robots.txt`.
-5. Push to `main` and wait for CI to be green.
+1. Replace the placeholder phone/email in the footer of `app/html/index.html`
+   (currently `+57 300 000 0000` / `info@wilchesfitness.com`).
+2. `git push` and wait for CI to be green.
 
-The checklist in docs/PRODUCTION_CHECKLIST.md covers these in detail.
+Already done in code (2026-07-04): real plans and prices, `noindex` removed,
+`robots.txt` allowing indexing, SEO/OG metadata, security headers.
+Post-deploy (needs the final address): `<link rel="canonical">` and absolute
+`og:image` URL — see the HTTPS/domain section below.
 
 ## Step 1 — Verify your admin IP
 

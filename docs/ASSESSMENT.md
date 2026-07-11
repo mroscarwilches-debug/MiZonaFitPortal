@@ -1,4 +1,7 @@
-# Project Assessment — MiZonaFitPortal
+# Project Assessment — Warrior Code Portal
+
+> Historical document: written when the project was still named
+> "MiZonaFitPortal", before the rebrand to "El Código del Guerrero".
 
 Date: 2026-07-04
 Author: Claude (automated engineering review)

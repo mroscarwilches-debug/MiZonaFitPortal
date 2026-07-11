@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>El Código del Guerrero — Entrenamiento personalizado by Mr. Wilches</title>
   <meta name="description" content="El Código del Guerrero by Mr. Wilches: entrenamiento personalizado, nutrición deportiva y disciplina para transformar tu cuerpo y tu mente. Bogotá, Colombia." />
-  <!-- Remove noindex at go-live: the site is private during development -->
-  <meta name="robots" content="noindex, nofollow" />
   <meta name="theme-color" content="#0d0d0d" />
 
   <!-- Open Graph / social sharing -->
@@ -17,7 +15,10 @@
   <meta property="og:locale" content="es_CO" />
 
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-  <link rel="preload" as="image" href="assets/img/hero-1080.avif" type="image/avif" media="(min-width: 641px)" />
+  <!-- imagesrcset mirrors the hero <source> so the preload never mismatches -->
+  <link rel="preload" as="image" type="image/avif"
+        imagesrcset="assets/img/hero-640.avif 640w, assets/img/hero-1080.avif 1080w, assets/img/hero-1600.avif 1600w"
+        imagesizes="100vw" />
   <link rel="stylesheet" href="css/main.css" />
 </head>
 <body>
@@ -49,7 +50,7 @@
       <div class="hero-content">
         <p class="hero-kicker">by Mr. Wilches</p>
         <h1>El Código del <span>Guerrero</span></h1>
-        <p>Entrenamiento personalizado, nutrición y disciplina para transformar tu cuerpo y tu mente. Resultados reales.</p>
+        <p>Aquí no vendemos cuerpos perfectos: entrenamos la disciplina que los construye. Entrenamiento y nutrición a tu medida, estés donde estés.</p>
         <div class="hero-actions">
           <a href="#planes" class="btn">Ver planes</a>
           <a href="#metodo" class="btn btn-secondary">Conoce el método</a>
@@ -57,12 +58,12 @@
       </div>
     </section>
 
-    <!-- STATS -->
+    <!-- VALUE PROPS -->
     <div class="stats">
-      <div class="stat"><h2>+500</h2><p>Miembros activos</p></div>
-      <div class="stat"><h2>10+</h2><p>Años de experiencia</p></div>
-      <div class="stat"><h2>15</h2><p>Entrenadores certificados</p></div>
-      <div class="stat"><h2>98%</h2><p>Satisfacción</p></div>
+      <div class="stat"><h2>+200</h2><p>Transformaciones reales</p></div>
+      <div class="stat"><h2>1 a 1</h2><p>Acompañamiento real</p></div>
+      <div class="stat"><h2>100%</h2><p>Personalizado</p></div>
+      <div class="stat"><h2>Online</h2><p>Casa o gym, donde estés</p></div>
     </div>
 
     <!-- METHOD -->
@@ -76,12 +77,12 @@
         </picture>
         <div class="method-text">
           <h3>Un código. Una disciplina. Tu mejor versión.</h3>
-          <p>El Código del Guerrero no es una rutina más: es un sistema de entrenamiento, nutrición y mentalidad diseñado por Mr. Wilches para que cada sesión te acerque a tu objetivo.</p>
+          <p>El Código del Guerrero no es una rutina más: es un sistema de entrenamiento, nutrición y mentalidad que Mr. Wilches construyó viviéndolo — con caídas, levantadas y constancia. Nada de fórmulas mágicas: un proceso real, a tu medida, con alguien que ya recorrió el camino y sabe lo que cuesta.</p>
           <ul class="method-pillars">
-            <li><strong>Disciplina:</strong> hábitos que se sostienen en el tiempo.</li>
+            <li><strong>Disciplina:</strong> la motivación te arranca; los hábitos te sostienen.</li>
             <li><strong>Entrenamiento inteligente:</strong> programas a tu medida, no plantillas.</li>
-            <li><strong>Nutrición real:</strong> comes para rendir, no para sufrir.</li>
-            <li><strong>Mentalidad:</strong> la fuerza empieza en la cabeza.</li>
+            <li><strong>Nutrición real:</strong> comes para rendir y vivir, no para sufrir.</li>
+            <li><strong>Mentalidad:</strong> la fuerza empieza en la cabeza; el cuerpo la sigue.</li>
           </ul>
           <a href="#contacto" class="btn">Empieza hoy</a>
         </div>
@@ -122,23 +123,23 @@
         <div class="cards">
           <div class="card">
             <span class="icon" aria-hidden="true">🏋️</span>
-            <h3>Entrenamiento de fuerza</h3>
-            <p>Programas de pesas diseñados por expertos para ganar músculo y mejorar tu composición corporal.</p>
-          </div>
-          <div class="card">
-            <span class="icon" aria-hidden="true">🏃</span>
-            <h3>Cardio &amp; HIIT</h3>
-            <p>Sesiones de alta intensidad que queman grasa y mejoran tu resistencia cardiovascular.</p>
+            <h3>Entrenamiento personalizado</h3>
+            <p>Rutinas diseñadas para ti, en casa o en el gym. Sin plantillas genéricas: tu cuerpo, tu nivel, tu objetivo.</p>
           </div>
           <div class="card">
             <span class="icon" aria-hidden="true">🥗</span>
-            <h3>Nutrición deportiva</h3>
-            <p>Asesoría nutricional personalizada para complementar tu entrenamiento y maximizar resultados.</p>
+            <h3>Nutrición real</h3>
+            <p>Un plan de alimentación que se adapta a tu vida, no al revés. Comer bien no es sufrir: es aprender.</p>
           </div>
           <div class="card">
-            <span class="icon" aria-hidden="true">🧘</span>
-            <h3>Yoga &amp; Movilidad</h3>
-            <p>Clases para mejorar flexibilidad, reducir el estrés y acelerar la recuperación muscular.</p>
+            <span class="icon" aria-hidden="true">📊</span>
+            <h3>Seguimiento y valoración</h3>
+            <p>Medimos tu progreso y ajustamos el plan sobre la marcha. La constancia se construye con acompañamiento.</p>
+          </div>
+          <div class="card">
+            <span class="icon" aria-hidden="true">🏢</span>
+            <h3>Bienestar corporativo</h3>
+            <p>Seminarios presenciales para empresas: hábitos saludables, higiene postural y pausas activas para tu equipo.</p>
           </div>
         </div>
       </section>
@@ -146,40 +147,68 @@
 
     <!-- PLANS -->
     <section id="planes" class="section" aria-labelledby="plans-title">
-      <h2 id="plans-title" class="section-title">Elige tu <span>Plan</span></h2>
-      <div class="plans">
+      <h2 id="plans-title" class="section-title">Elige tu <span>Protocolo</span></h2>
+      <p class="section-subtitle">No importa desde dónde empieces. Importa que empieces. Cada protocolo es 100% personalizado: tu cuerpo, tu ritmo, tus metas.</p>
+      <div class="carousel">
+        <button id="plans-prev" class="carousel-btn prev" type="button" aria-label="Ver plan anterior"><span aria-hidden="true">‹</span></button>
+        <div class="plans" id="plans-track" role="group" aria-label="Protocolos disponibles" tabindex="0">
         <div class="plan">
-          <h3>Básico</h3>
-          <div class="price"><sup>$</sup>29<sub>/mes</sub></div>
+          <h3>Consultoría Express</h3>
+          <p class="plan-tagline">Para salir de dudas y arrancar con claridad.</p>
+          <div class="price">$25<span class="currency">USD</span></div>
+          <p class="price-note">Sesión única</p>
           <ul>
-            <li>Acceso a sala de pesas</li>
-            <li>Cardio ilimitado</li>
-            <li>Casillero incluido</li>
+            <li>1 hora de sesión online</li>
+            <li>Revisión de tus antecedentes y hábitos</li>
+            <li>Definición de objetivos reales</li>
+            <li>Validación de tu rutina y nutrición actuales</li>
           </ul>
-          <a href="#contacto" class="btn">Empezar</a>
+          <a href="#contacto" class="btn">Agenda tu sesión</a>
         </div>
         <div class="plan featured">
-          <h3>Pro</h3>
-          <div class="price"><sup>$</sup>59<sub>/mes</sub></div>
+          <h3>Protocolo Estándar</h3>
+          <p class="plan-tagline">Tu transformación de 3 meses, paso a paso.</p>
+          <div class="price">$90<span class="currency">USD</span></div>
+          <p class="price-note">Programa de 3 meses</p>
           <ul>
-            <li>Todo el plan Básico</li>
-            <li>2 sesiones con entrenador</li>
-            <li>Plan nutricional</li>
-            <li>Clases grupales</li>
+            <li>Rutina personalizada para casa o gym</li>
+            <li>Plan de nutrición acorde a tus necesidades</li>
+            <li>Seguimiento semanal de tu progreso</li>
+            <li>Valoración trimestral</li>
+            <li>Acompañamiento online trimestral</li>
           </ul>
-          <a href="#contacto" class="btn">Empezar</a>
+          <a href="#contacto" class="btn">Empieza tu proceso</a>
         </div>
         <div class="plan">
-          <h3>Elite</h3>
-          <div class="price"><sup>$</sup>99<sub>/mes</sub></div>
+          <h3>Protocolo Black</h3>
+          <p class="plan-tagline">Entreno contigo, semana a semana.</p>
+          <div class="price">$115<span class="currency">USD</span></div>
+          <p class="price-note">12 sesiones en vivo</p>
           <ul>
-            <li>Todo el plan Pro</li>
-            <li>Entrenamiento ilimitado</li>
-            <li>Seguimiento mensual</li>
-            <li>Acceso 24/7</li>
+            <li>12 sesiones online en vivo</li>
+            <li>3 sesiones de 1 hora por semana</li>
+            <li>Rutina personalizada para casa o gym</li>
+            <li>Plan de nutrición a tu medida</li>
+            <li>Valoración y seguimiento mensual</li>
           </ul>
-          <a href="#contacto" class="btn">Empezar</a>
+          <a href="#contacto" class="btn">Entrena conmigo</a>
         </div>
+        <div class="plan">
+          <h3>Seminario Corporativo</h3>
+          <p class="plan-tagline">Bienestar real para tu empresa.</p>
+          <div class="price">$970<span class="currency">USD</span></div>
+          <p class="price-note">Por evento presencial</p>
+          <ul>
+            <li>Charla presencial de hasta 3 horas</li>
+            <li>Hábitos saludables en la oficina</li>
+            <li>Salud e higiene postural</li>
+            <li>Pausas activas y alimentación</li>
+            <li>Público hasta de 1000 personas</li>
+          </ul>
+          <a href="#contacto" class="btn">Cotiza tu evento</a>
+        </div>
+        </div>
+        <button id="plans-next" class="carousel-btn next" type="button" aria-label="Ver plan siguiente"><span aria-hidden="true">›</span></button>
       </div>
     </section>
 
@@ -218,7 +247,7 @@
 
   <!-- FOOTER -->
   <footer>
-    <p><strong>El Código del Guerrero</strong> &mdash; by Mr. Wilches. Tu mejor versión empieza hoy.</p>
+    <p><strong>El Código del Guerrero</strong> &mdash; by Mr. Wilches. Crea tu transformación.</p>
     <div class="footer-contact">
       <span>📍 Bogotá, Colombia</span>
       <a href="tel:+573000000000">📞 +57 300 000 0000</a>

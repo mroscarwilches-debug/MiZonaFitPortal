@@ -30,5 +30,5 @@ variable "key_name" {
 variable "repository_url" {
   description = "Git repository cloned by the instance at boot"
   type        = string
-  default     = "https://github.com/mroscarwilches-debug/MiZonaFitPortal.git"
+  default     = "https://github.com/mroscarwilches-debug/warrior-code-portal.git"
 }
