@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pago — El Código del Guerrero</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Ir al contenido principal</a>
+
+  <nav aria-label="Navegación principal">
+    <a class="logo" href="index.html#main" aria-label="El Código del Guerrero — inicio">El Código del <span>Guerrero</span></a>
+  </nav>
+
+  <main id="main">
+    <section class="section auth-page" aria-labelledby="checkout-title">
+      <div class="auth-card">
+        <h1 id="checkout-title" class="section-title">Confirma tu <span>plan</span></h1>
+
+        <div id="plan-summary" class="plan-summary">
+          <p>Cargando tu plan…</p>
+        </div>
+
+        <button id="pay-button" type="button" class="btn" disabled>Pagar con Wompi</button>
+        <p id="checkout-status" class="form-status" role="status" aria-live="polite"></p>
+        <p class="auth-note">El pago se procesa en la página segura de Wompi. Ningún dato de tu tarjeta pasa por este sitio.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>El Código del Guerrero</strong> &mdash; by Mr. Wilches.</p>
+  </footer>
+
+  <script type="module" src="js/checkout.js"></script>
+</body>
+</html>

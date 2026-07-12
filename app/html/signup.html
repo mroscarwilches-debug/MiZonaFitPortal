@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crea tu cuenta — El Código del Guerrero</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Ir al contenido principal</a>
+
+  <nav aria-label="Navegación principal">
+    <a class="logo" href="index.html#main" aria-label="El Código del Guerrero — inicio">El Código del <span>Guerrero</span></a>
+  </nav>
+
+  <main id="main">
+    <section class="section auth-page" aria-labelledby="signup-title">
+      <div class="auth-card">
+        <h1 id="signup-title" class="section-title">Crea tu <span>cuenta</span></h1>
+        <p class="section-subtitle" id="signup-plan-subtitle">Estás a un paso de empezar tu protocolo.</p>
+        <p class="auth-alt-action auth-alt-action-top">¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p>
+
+        <form id="signup-form" class="contact-form" novalidate>
+          <div class="form-field">
+            <label for="field-name">Nombre</label>
+            <input id="field-name" name="name" type="text" autocomplete="name" required aria-describedby="error-name" />
+            <p id="error-name" class="field-error" role="alert"></p>
+          </div>
+          <div class="form-field">
+            <label for="field-email">Correo electrónico</label>
+            <input id="field-email" name="email" type="email" autocomplete="email" placeholder="tunombre@gmail.com" required aria-describedby="hint-email error-email" />
+            <p id="hint-email" class="field-hint">Ejemplo: tunombre@gmail.com</p>
+            <p id="error-email" class="field-error" role="alert"></p>
+          </div>
+          <div class="form-field">
+            <label for="field-password">Contraseña</label>
+            <input id="field-password" name="password" type="password" autocomplete="new-password" required aria-describedby="hint-password error-password" />
+            <p id="hint-password" class="field-hint">Mínimo 8 caracteres.</p>
+            <p id="error-password" class="field-error" role="alert"></p>
+          </div>
+          <div class="form-field">
+            <label for="field-password-confirm">Confirma tu contraseña</label>
+            <input id="field-password-confirm" name="passwordConfirm" type="password" autocomplete="new-password" required aria-describedby="error-password-confirm" />
+            <p id="error-password-confirm" class="field-error" role="alert"></p>
+          </div>
+
+          <div class="form-field">
+            <label for="field-plan">Elige tu protocolo</label>
+            <select id="field-plan" name="plan"></select>
+            <p id="plan-price" class="field-hint plan-price"></p>
+          </div>
+
+          <button type="submit" class="btn">Crear cuenta y continuar al pago</button>
+          <p id="form-status" class="form-status" role="alert" aria-live="assertive"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>El Código del Guerrero</strong> &mdash; by Mr. Wilches.</p>
+  </footer>
+
+  <script type="module" src="js/signup.js"></script>
+</body>
+</html>

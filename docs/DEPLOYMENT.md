@@ -1,56 +1,65 @@
-# Deployment Guide — AWS EC2
+# Deployment Guide — Publishing on AWS EC2
 
-> **Status: NOT DEPLOYED.** Nothing runs automatically. CI never touches
-> Terraform state or AWS credentials. Deployment is a manual, owner-executed
-> procedure from your workstation.
+> **Status: NOT DEPLOYED.** Nothing happens automatically — CI never touches
+> AWS or Terraform's state. Publishing the site is something you do by hand,
+> from your own computer, whenever you decide to.
 >
-> Verified 2026-07-04: `terraform validate` passes and `terraform plan` shows
-> exactly `2 to add, 0 to change, 0 to destroy` (instance + security group).
+> Last checked 2026-07-04: `terraform validate` passes, and `terraform plan`
+> shows exactly `2 to add, 0 to change, 0 to destroy` (one server, one
+> firewall).
 
 ## What gets created
 
 | Resource | Details |
 |---|---|
-| `aws_instance.web` | t3.micro, Ubuntu 24.04, encrypted gp3 root disk, IMDSv2 required |
-| `aws_security_group.web_sg` | 80/443 open per `http_ingress_cidr`, SSH only from `admin_cidr` |
+| `aws_instance.web` | A small server (t3.micro), Ubuntu 24.04, encrypted disk, with extra protection against credential-theft attacks (IMDSv2) |
+| `aws_security_group.web_sg` | The firewall: web traffic (80/443) open per `http_ingress_cidr`, SSH allowed only from `admin_cidr` (your IP) |
 
-At boot the instance installs Docker + automatic security updates, clones this
-repository, and runs the same `docker compose up` you use locally (on port 80).
-Estimated cost: **~$12–14/month** (instance + disk + public IPv4).
+When the server boots, it installs Docker and automatic security updates,
+downloads this repository, and runs the exact same `docker compose up` you
+use locally (just on port 80 instead of 8080). Estimated cost:
+**~$12–14/month** (server + disk + a public IP address).
 
-## Prerequisites (already satisfied on your machine)
+## Before you start (already set up on your machine)
 
-- AWS CLI configured with credentials (`aws sts get-caller-identity` works)
-- Terraform ≥ 1.7 installed
-- EC2 key pair `WilchesFitness` exists in us-east-1 and you have the `.pem`
-- Remote state bucket `wilchesfitness-tfstate` exists (S3, versioned)
+- AWS CLI is configured with credentials (`aws sts get-caller-identity`
+  works)
+- Terraform 1.7 or newer is installed
+- The EC2 key pair `WilchesFitness` exists in the `us-east-1` region, and you
+  have the matching `.pem` file
+- The remote state bucket `wilchesfitness-tfstate` already exists (S3, with
+  version history on)
 
-## Step 0 — Push to GitHub (required)
+## Step 0 — Push to GitHub first
 
-**The instance clones `main` from GitHub at boot** — whatever is on GitHub is
-what goes live. Before applying:
+**The server downloads `main` from GitHub the moment it boots up** — so
+whatever is on GitHub is exactly what will go live. Before running
+`terraform apply`:
 
-1. Replace the placeholder phone/email in the footer of `app/html/index.html`
-   (currently `+57 300 000 0000` / `info@wilchesfitness.com`).
-2. `git push` and wait for CI to be green.
+1. Replace the placeholder phone number and email in the footer of
+   `app/html/index.html` (currently `+57 300 000 0000` and
+   `info@wilchesfitness.com`).
+2. `git push`, and wait for the automatic checks (CI) to pass.
 
-Already done in code (2026-07-04): real plans and prices, `noindex` removed,
-`robots.txt` allowing indexing, SEO/OG metadata, security headers.
-Post-deploy (needs the final address): `<link rel="canonical">` and absolute
-`og:image` URL — see the HTTPS/domain section below.
+Already done as of 2026-07-04: real prices and plans are in place, the
+`noindex` tag that blocked search engines was removed, `robots.txt` now
+allows indexing, and SEO/social-sharing tags and security headers are set
+up. Still pending (needs the final web address): the canonical link and the
+full image URL for social sharing — see the HTTPS/domain section below.
 
-## Step 1 — Verify your admin IP
+## Step 1 — Confirm your current IP address
 
-SSH access is locked to `admin_cidr` (default `181.63.25.164/32`). If your
-public IP changed (it is a residential connection):
+SSH access is locked down to `admin_cidr` (defaults to
+`181.63.25.164/32`). If your internet connection's public IP has changed
+since then (common on home internet):
 
 ```bash
 curl https://api.ipify.org
 ```
 
-Pass the current value in Step 3 if it differs from the default.
+If it's different from the default, pass the new value in Step 3.
 
-## Step 2 — Review the plan
+## Step 2 — Review what Terraform is about to do
 
 ```bash
 cd terraform
@@ -58,92 +67,98 @@ terraform init
 terraform plan
 ```
 
-Expected: `Plan: 2 to add, 0 to change, 0 to destroy.` Anything else — stop and
-investigate before applying.
+You should see exactly: `Plan: 2 to add, 0 to change, 0 to destroy.` If it
+shows anything else, stop and figure out why before continuing.
 
-## Step 3 — Apply
+## Step 3 — Apply it
 
 ```bash
 terraform apply
-# or, overriding the admin IP:
+# or, if your IP is different from the default:
 terraform apply -var "admin_cidr=<your-ip>/32"
 ```
 
-Review the plan output and type `yes`. Provisioning takes ~2 minutes plus
-~2–3 minutes of boot-time setup (Docker install + image build). Outputs show
-`portal_url` and a ready-made `ssh_command`.
+Read the plan it shows you, then type `yes`. Creating the server takes about
+2 minutes, plus another 2–3 minutes for it to finish booting up (installing
+Docker and building the site). When it's done, you'll get the site's address
+(`portal_url`) and a ready-to-use SSH command.
 
-### Private validation phase (optional, recommended)
+### Optional: test it privately before making it public
 
-To deploy but keep the site visible only to you first:
+To publish the site but keep it visible only to you at first:
 
 ```bash
 terraform apply -var "http_ingress_cidr=<your-ip>/32"
 ```
 
-Validate, then open it to the world with:
+Once you've checked everything looks right, open it to everyone with:
 
 ```bash
 terraform apply -var "http_ingress_cidr=0.0.0.0/0"
 ```
 
-(Security-group-only change; the instance is not touched.)
+(This only changes the firewall rule — the server itself isn't touched.)
 
-## Step 4 — Verify
+## Step 4 — Check it worked
 
 ```bash
 terraform output portal_url
 curl -sI http://<ip>/ | grep -iE "200|content-security"
 ```
 
-Then run the E2E suite against production (from the repo, site public or your
-IP allowed):
+Then run the full test suite against the live site (from the repo, once the
+site is either public or your IP is allowed through):
 
 ```bash
 docker run --rm -v "<repo>:/repo" -w /repo -e BASE_URL=http://<ip> \
   mcr.microsoft.com/playwright:v1.53.0-noble sh -c "npm ci && npm run test:e2e"
 ```
 
-## Updating the site after deployment
+## Updating the site after it's live
 
-The instance builds the site from `main` at boot. To ship a content update:
+The server builds the site from `main` when it boots — it doesn't
+auto-update after that. To push a content change live:
 
 ```bash
-# after git push to main (CI green):
+# after pushing to main and CI is green:
 ssh -i <WilchesFitness.pem> ubuntu@<ip> \
   "cd /opt/warrior-code-portal && git pull && cd app && docker compose up -d --build"
 ```
 
-Rollback: docs/ROLLBACK.md.
+If something goes wrong, see docs/ROLLBACK.md.
 
-## HTTPS / custom domain (recommended follow-up)
+## Adding HTTPS / a custom domain (recommended next step)
 
-Port 443 is already open in the security group, but the container serves plain
-HTTP. Once you have a domain:
+Port 443 is already open in the firewall, but right now the server only
+speaks plain HTTP. Once you have a domain name:
 
-1. Point an `A` record at the instance IP (consider an Elastic IP first so the
-   address survives instance stop/start: `aws ec2 allocate-address`).
-2. On the instance, run a TLS-terminating reverse proxy. Simplest option is
-   Caddy in front of nginx (automatic Let's Encrypt certificates), or certbot
-   with nginx installed on the host.
-3. Update `canonical`/`og:image` URLs to `https://` and redeploy content.
+1. Point an `A` record at the server's IP address (consider reserving an
+   Elastic IP first, so the address doesn't change if the server restarts:
+   `aws ec2 allocate-address`).
+2. On the server, set up something to handle HTTPS in front of nginx. The
+   simplest option is Caddy (it gets free certificates automatically), or
+   certbot paired with nginx installed directly on the server.
+3. Update the `canonical` link and `og:image` URL to use `https://`, then
+   redeploy.
 
-Until then, treat the site as HTTP-only and do not add any login or payment
-credential flows (the payment plan in docs/PAYMENTS.md uses provider-hosted
-pages precisely so card data never touches this server).
+Until HTTPS is set up, treat the site as HTTP-only, and don't add any login
+or payment flows that handle card data (the payment plan in
+docs/PAYMENTS.md deliberately uses provider-hosted pages so card numbers
+never pass through this server).
 
-## Teardown
+## Tearing it down
 
 ```bash
 cd terraform && terraform destroy
 ```
 
-Returns AWS cost to ~$0 (S3 state bucket pennies). The site keeps working
-locally and can be redeployed any time with `terraform apply`.
+This brings the AWS cost back down to nearly $0 (just pennies for the S3
+state bucket). The site keeps working locally the whole time, and can be
+republished any time with `terraform apply`.
 
 ## Alternative: Cloudflare Pages ($0/month)
 
-The static-host comparison and Cloudflare Pages setup are documented in
-docs/ARCHITECTURE.md §2. It remains the lowest-cost option if you ever want to
-move off EC2; the site source needs no changes (`app/html` is the publish
-directory).
+The comparison between static hosts, including how to set up Cloudflare
+Pages, is in docs/ARCHITECTURE.md §2. It's still the cheapest option if you
+ever want to move off AWS — the site itself wouldn't need any changes
+(`app/html` would simply become the folder Cloudflare publishes).

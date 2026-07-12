@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tu panel — El Código del Guerrero</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Ir al contenido principal</a>
+
+  <nav aria-label="Navegación principal">
+    <a class="logo" href="index.html#main" aria-label="El Código del Guerrero — inicio">El Código del <span>Guerrero</span></a>
+    <button id="logout-button" type="button" class="btn btn-secondary">Cerrar sesión</button>
+  </nav>
+
+  <main id="main">
+    <section class="section" aria-labelledby="dashboard-title">
+      <h1 id="dashboard-title" class="section-title">Tu <span>Panel</span></h1>
+      <p id="dashboard-status" role="status" aria-live="polite">Cargando tu información…</p>
+
+      <div class="dashboard-steps">
+        <div id="step-pending-payment" class="card dashboard-step" hidden>
+          <h3>Completa tu pago</h3>
+          <p>Tu registro está listo, falta confirmar el pago de tu plan.</p>
+          <a id="pending-payment-link" class="btn" href="checkout.html">Completar pago</a>
+        </div>
+
+        <div id="step-valoracion" class="card dashboard-step" hidden>
+          <h3>Cuéntanos sobre ti</h3>
+          <p>Antes de tu primera llamada, revisa esta guía para tomarte las medidas correctamente y luego diligencia tu valoración física y nutricional.</p>
+          <a id="measurement-guide-link" class="btn btn-secondary" target="_blank" rel="noopener">Ver guía de medidas</a>
+          <a id="valoracion-form-link" class="btn" target="_blank" rel="noopener">Diligenciar valoración</a>
+        </div>
+
+        <div id="step-schedule" class="card dashboard-step" hidden>
+          <h3>Agenda tu primera llamada</h3>
+          <p>Elige un horario disponible (sesiones de 1 hora, de 6–8 a.m. o 7–9 p.m.).</p>
+          <a class="btn" href="schedule.html">Agendar llamada</a>
+        </div>
+
+        <div id="step-black-recurring" class="card dashboard-step" hidden>
+          <h3>Tus clases del Protocolo Black</h3>
+          <p>Tu coach te contactará después de la entrevista para acordar el horario fijo de tus 3 clases semanales.</p>
+        </div>
+
+        <div id="step-waiting-guide" class="card dashboard-step" hidden>
+          <h3>Tu coach está preparando tu guía</h3>
+          <p>Después de tu llamada, tu guía de entrenamiento y nutrición aparecerá aquí.</p>
+        </div>
+
+        <div id="step-guide-ready" class="card dashboard-step" hidden>
+          <h3>¡Tu guía está lista!</h3>
+          <a id="guide-link" class="btn" target="_blank" rel="noopener">Ver mi guía</a>
+        </div>
+
+        <div id="step-monthly-checkin" class="card dashboard-step" hidden>
+          <h3>Seguimiento mensual</h3>
+          <p>Cuéntanos cómo va tu proceso este mes.</p>
+          <a id="seguimiento-form-link" class="btn btn-secondary" target="_blank" rel="noopener">Diligenciar seguimiento</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>El Código del Guerrero</strong> &mdash; by Mr. Wilches.</p>
+  </footer>
+
+  <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>

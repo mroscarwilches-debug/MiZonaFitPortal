@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confirmación de pago — El Código del Guerrero</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Ir al contenido principal</a>
+
+  <nav aria-label="Navegación principal">
+    <a class="logo" href="index.html#main" aria-label="El Código del Guerrero — inicio">El Código del <span>Guerrero</span></a>
+  </nav>
+
+  <main id="main">
+    <section class="section auth-page" aria-labelledby="confirmation-title">
+      <div class="auth-card">
+        <h1 id="confirmation-title" class="section-title">Estado de tu <span>pago</span></h1>
+        <p id="confirmation-message" role="status" aria-live="polite">Confirmando tu pago con Wompi…</p>
+        <a id="confirmation-cta" class="btn" href="dashboard.html" hidden>Ir a tu panel</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>El Código del Guerrero</strong> &mdash; by Mr. Wilches.</p>
+  </footer>
+
+  <script type="module" src="js/payment-confirmation.js"></script>
+</body>
+</html>
