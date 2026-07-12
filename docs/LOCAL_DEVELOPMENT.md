@@ -1,8 +1,9 @@
 # Local Development Guide
 
-Everything runs through Docker; no local Node.js, Terraform or image tooling is
-required. Commands below are for PowerShell or Git Bash on Windows (adjust the
-repo path if yours differs).
+Everything runs through Docker — you don't need Node.js, Terraform, or any
+image tools installed on your own machine. The commands below work in
+PowerShell or Git Bash on Windows (adjust the repo path if yours is
+different).
 
 ## Run the site
 
@@ -11,14 +12,17 @@ cd app
 docker compose up --build          # http://localhost:8080
 ```
 
-- `WEB_PORT=80 docker compose up --build` to serve on port 80 (production parity).
-- `docker compose down` to stop.
-- The container serves the files baked into the image; rebuild (`--build`) after
-  editing anything under `app/html/`.
+- Run `WEB_PORT=80 docker compose up --build` to serve it on port 80 instead
+  (matches production).
+- `docker compose down` stops it.
+- The container serves whatever was baked into the image at build time — if
+  you edit anything under `app/html/`, rebuild (`--build`) to see the
+  change.
 
 ## Run the tests
 
-Prerequisite: the site running on `:8080` (previous section).
+Before running these, make sure the site is already running on `:8080`
+(previous section).
 
 ```bash
 docker run --rm --add-host=host.docker.internal:host-gateway ^
@@ -28,13 +32,15 @@ docker run --rm --add-host=host.docker.internal:host-gateway ^
   sh -c "npm install && npm test"
 ```
 
-- `npm run test:unit` — Vitest unit tests for `app/html/js/validation.js`.
-- `npm run test:e2e` — Playwright E2E on desktop + mobile viewports, including
-  an axe-core scan that fails on any WCAG A/AA violation.
-- In Git Bash prefix docker commands with `MSYS_NO_PATHCONV=1` and use `\` line
-  continuations instead of `^`.
+- `npm run test:unit` runs just the fast checks on
+  `app/html/js/validation.js` (Vitest).
+- `npm run test:e2e` opens a real browser and tests the whole site on both
+  desktop and mobile screen sizes, including an accessibility scan (axe)
+  that fails if it finds any WCAG A/AA violation.
+- In Git Bash, add `MSYS_NO_PATHCONV=1` before the docker commands, and use
+  `\` instead of `^` for line breaks.
 
-## Performance audit (Lighthouse)
+## Checking performance (Lighthouse)
 
 ```bash
 docker run --rm --shm-size=1g --add-host=host.docker.internal:host-gateway ^
@@ -42,16 +48,19 @@ docker run --rm --shm-size=1g --add-host=host.docker.internal:host-gateway ^
   --output=json --quiet --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage"
 ```
 
-Baseline (2026-07-04): performance 1.0, accessibility 1.0, CLS 0, TBT 0 ms.
-`best-practices`/`seo` report HTTPS and `noindex` findings that are intentional
-while local (see docs/PRODUCTION_CHECKLIST.md).
+Last measured (2026-07-04): perfect scores for performance and
+accessibility, no layout shift, 0ms blocking time. The `best-practices` and
+`seo` categories will flag the missing HTTPS and the `noindex` tag while
+running locally — that's expected and intentional (see
+docs/PRODUCTION_CHECKLIST.md).
 
-## Regenerating images
+## Updating the site's photos
 
-Curated originals live outside the repo under `F:\MiZonaFit` (multiple photo
-shoots). The pipeline (`tools/optimize-images.mjs`) maps slugs to source files
-(paths relative to that root) and emits AVIF/WebP responsive variants plus the
-Open Graph JPEG into `app/html/assets/img/`:
+The original, curated photos live outside this repo, in `F:\MiZonaFit`
+(several photoshoots). The script `tools/optimize-images.mjs` maps each
+photo to a short name and generates lightweight AVIF/WebP versions in
+several sizes, plus the social-sharing image, into
+`app/html/assets/img/`:
 
 ```bash
 docker run --rm ^
@@ -62,10 +71,25 @@ docker run --rm ^
   sh -c "cp /tools/optimize-images.mjs . && npm install sharp && node optimize-images.mjs"
 ```
 
-To swap a photo, edit the `IMAGES` map in the script and re-run.
+To swap in a different photo, edit the `IMAGES` list at the top of the
+script and run it again.
 
-## Contact form in local mode
+## The contact form while working locally
 
-`app/html/index.html` has `data-endpoint=""` on the form. With an empty
-endpoint the form validates and shows success without sending anything.
-Production wiring is described in docs/DEPLOYMENT.md.
+`app/html/index.html` sets `data-endpoint=""` on the form. With no endpoint
+configured, the form still validates input and shows a success message —
+it just doesn't send anything anywhere. How to wire it up for real is
+covered in docs/DEPLOYMENT.md.
+
+## Login, checkout, and the client dashboard
+
+These pages (`signup.html`, `login.html`, `checkout.html`, `dashboard.html`,
+`schedule.html`) need real values in `app/html/js/config.js` to work — copy
+it from `config.example.js` and fill it in following
+docs/AUTH_AND_AGENDAMIENTO.md (Supabase project, Wompi sandbox key, Google
+Forms links). Rebuild the container (`docker compose up --build`) after
+editing it, same as any other file under `app/html/`.
+
+Without a real `config.js`, these pages will load but fail as soon as they
+try to reach Supabase — that's expected until you've done the one-time setup
+in docs/AUTH_AND_AGENDAMIENTO.md.

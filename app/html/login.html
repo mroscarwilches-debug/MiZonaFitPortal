@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iniciar sesión — El Código del Guerrero</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Ir al contenido principal</a>
+
+  <nav aria-label="Navegación principal">
+    <a class="logo" href="index.html#main" aria-label="El Código del Guerrero — inicio">El Código del <span>Guerrero</span></a>
+  </nav>
+
+  <main id="main">
+    <section class="section auth-page" aria-labelledby="login-title">
+      <div class="auth-card">
+        <h1 id="login-title" class="section-title">Inicia <span>sesión</span></h1>
+
+        <form id="login-form" class="contact-form" novalidate>
+          <div class="form-field">
+            <label for="field-email">Correo electrónico</label>
+            <input id="field-email" name="email" type="email" autocomplete="email" required aria-describedby="error-email" />
+            <p id="error-email" class="field-error" role="alert"></p>
+          </div>
+          <div class="form-field">
+            <label for="field-password">Contraseña</label>
+            <input id="field-password" name="password" type="password" autocomplete="current-password" required aria-describedby="error-password" />
+            <p id="error-password" class="field-error" role="alert"></p>
+          </div>
+
+          <button type="submit" class="btn">Entrar</button>
+          <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <p class="auth-alt-action">¿Aún no tienes cuenta? <a href="signup.html">Regístrate</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>El Código del Guerrero</strong> &mdash; by Mr. Wilches.</p>
+  </footer>
+
+  <script type="module" src="js/login.js"></script>
+</body>
+</html>

@@ -1,53 +1,72 @@
-# Project Assessment — Warrior Code Portal
+# Project Assessment — Where Things Started
 
-> Historical document: written when the project was still named
-> "MiZonaFitPortal", before the rebrand to "El Código del Guerrero".
+> Historical document: written back when the project was still called
+> "MiZonaFitPortal", before the rebrand to "El Código del Guerrero". Kept for
+> the record — this describes the *starting point*, not the current state.
 
 Date: 2026-07-04
 Author: Claude (automated engineering review)
 
-## 1. Current State
+## 1. What the project looked like at the start
 
-### Application
-- Single static page: `app/html/index.html` (~460 lines, inline CSS + inline JS).
-- Content: fitness landing page (hero, stats, services, pricing plans, footer) in Spanish.
-- No build system, no bundler, no images, no favicon, no SEO metadata beyond `<title>`.
-- Served by `nginx:latest` inside Docker (`app/Dockerfile`, `app/docker-compose.yml`), port 80.
+### The site
+- One HTML page: `app/html/index.html` (about 460 lines, with all the CSS
+  and JavaScript written directly inside it instead of separate files).
+- Content: a fitness landing page (hero, stats, services, pricing, footer)
+  in Spanish.
+- No build tools, no images, no favicon, and almost no SEO tags beyond a
+  page title.
+- Served by a generic `nginx:latest` container (`app/Dockerfile`,
+  `app/docker-compose.yml`), on port 80.
 
-### Infrastructure (Terraform, AWS us-east-1)
-- `aws_instance.example`: t3.micro Ubuntu 22.04, key pair `WilchesFitness`.
-- `user_data` installs Docker, clones this public GitHub repo, runs `docker-compose up`.
-- `aws_security_group.web_sg`: ports 80 and 22 open to `0.0.0.0/0`.
-- Remote state in S3 bucket `wilchesfitness-tfstate` (versioned, created ad hoc by CI).
-- Local `terraform.tfstate` files are committed inside `terraform/` directory despite S3 backend.
-- `.terraform/` provider binaries (~700 MB class artifacts) are present locally.
+### The AWS setup (Terraform, region us-east-1)
+- One server (`aws_instance.example`): a t3.micro running Ubuntu 22.04, with
+  the key pair `WilchesFitness`.
+- On boot, it installed Docker, cloned this public GitHub repo, and ran
+  `docker-compose up`.
+- The firewall (`aws_security_group.web_sg`) had ports 80 and 22 open to
+  **the entire internet** (`0.0.0.0/0`).
+- Terraform's state was stored remotely in an S3 bucket
+  (`wilchesfitness-tfstate`, with version history), but...
+- ...local `terraform.tfstate` files were also committed to git, sitting
+  right inside the `terraform/` folder despite the S3 setup.
+- Large provider binaries (~700 MB) from `.terraform/` were also present
+  locally.
 
-### CI/CD (`.github/workflows/hola-mundo.yml`)
-- Runs `terraform apply -auto-approve` on every push to `main`.
-- Creates the S3 state bucket with AWS CLI on every run.
-- No plan review, no lint, no tests, no image build/push, no app deployment step
-  (the EC2 instance only pulls the app once at boot via `user_data`).
+### The automated pipeline (`.github/workflows/hola-mundo.yml`)
+- Ran `terraform apply -auto-approve` on **every single push** to `main` —
+  no human review of what it was about to change.
+- Created the S3 state bucket from scratch on every run.
+- Had no code review step, no linting, no tests, and didn't actually deploy
+  the app itself — the server only ever pulled the app once, at boot time.
 
-## 2. Key Findings
+## 2. What we found wrong, ranked by how serious it was
 
-| # | Severity | Finding |
+| # | How serious | What was wrong |
 |---|----------|---------|
-| 1 | High | Site is publicly exposed (SG 80/22 open to the world) while the stated goal is to stay private during development. |
-| 2 | High | SSH (22) open to `0.0.0.0/0` — brute-force target. |
-| 3 | High | `terraform apply -auto-approve` on every push, no plan gate — any bad commit changes production infra. |
-| 4 | Medium | App updates require instance re-creation (deploy happens only in `user_data`); pushes to `app/` do nothing. |
-| 5 | Medium | `terraform.tfstate` + backup committed to git (state may contain sensitive values). |
-| 6 | Medium | EC2 t3.micro 24/7 (~$8–10/month + EBS + public IPv4 ~$3.6/month) is expensive and over-engineered for a static page. |
-| 7 | Low | `nginx:latest` unpinned tag; no gzip/cache headers configured. |
-| 8 | Low | Spanish used in code comments, resource names (`instancia_ip_publica`), workflow names — violates the English-only code rule. |
-| 9 | Low | No SEO (meta description, Open Graph, sitemap, robots), no accessibility audit, no images/brand assets used. |
+| 1 | High | The site was open to the whole internet (ports 80/22) even though the goal was to keep it private during development. |
+| 2 | High | SSH (port 22) was open to everyone — an easy target for automated password-guessing attacks. |
+| 3 | High | Every push ran `terraform apply -auto-approve` with no review step — one bad commit could change production infrastructure with nobody looking. |
+| 4 | Medium | Updating the site required recreating the whole server (deployment only happened in the boot script) — pushing changes to `app/` did nothing on its own. |
+| 5 | Medium | The Terraform state file (and its backup) were committed to git — state files can contain sensitive values. |
+| 6 | Medium | Running a t3.micro server 24/7 (about $8–10/month plus disk and IP costs) was overkill and expensive for a page that doesn't change. |
+| 7 | Low | The nginx version wasn't pinned (used `latest`, which can change unexpectedly); no compression or caching was configured. |
+| 8 | Low | Some code comments, resource names, and workflow names were in Spanish, breaking the project's English-only convention for code. |
+| 9 | Low | No SEO tags (description, social sharing preview, sitemap, robots.txt), no accessibility review, and no real photos or branding were in use. |
 
-## 3. Assets Review
-- `F:\MiZonaFit`: brand logos (`logo.png`, `LOGO-MZF-1.png`, `blanco*.png`, icons) and professional photo shoots (`FOTOESTUDIO21082024/Wilches team-*.jpg`, earlier shoots from 2022/2023).
-- `F:\MarcaPersonal`: personal photo archive (mixed, mostly unrelated raw material).
-- Action: curate a small set (hero, services, about, logo), convert to WebP/AVIF with responsive sizes, and vendor them into the repo under `app/html/assets/`. Originals stay on `F:`.
+## 3. What photo assets were available
+- `F:\MiZonaFit`: brand logos (`logo.png`, `LOGO-MZF-1.png`, white variants,
+  icons) and professional photoshoots (`FOTOESTUDIO21082024/Wilches
+  team-*.jpg`, plus earlier shoots from 2022–2023).
+- `F:\MarcaPersonal`: a personal photo archive — mostly unrelated raw
+  material, not curated for the site.
+- Action taken: pick a small, curated set (hero, services, about, logo),
+  convert them to WebP/AVIF in multiple sizes, and add them to the repo
+  under `app/html/assets/`. The originals stay on the `F:` drive.
 
-## 4. Conclusion
-The site content and mobile-first CSS are a good starting point. The infrastructure
-is the weak point: it is public, costly, and its deploy pipeline is unsafe.
-See `docs/ARCHITECTURE.md` for the proposal.
+## 4. Bottom line
+The site's content and mobile-first CSS were a solid starting point. The
+real problem was the infrastructure: it was open to the public, cost more
+than it needed to, and its deployment pipeline could break production
+without anyone reviewing the change first. See `docs/ARCHITECTURE.md` for
+what was proposed to fix that.

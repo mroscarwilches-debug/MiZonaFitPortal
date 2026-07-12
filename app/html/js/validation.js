@@ -23,6 +23,13 @@ export function validateMessage(value) {
   return null;
 }
 
+export function validatePassword(value) {
+  const trimmed = value ?? '';
+  if (trimmed.length < 8) return 'La contraseña debe tener mínimo 8 caracteres.';
+  if (trimmed.length > 72) return 'La contraseña es demasiado larga.';
+  return null;
+}
+
 // Returns { valid, errors } where errors maps field name → Spanish message.
 export function validateContactForm({ name, email, message, honeypot }) {
   // Bots fill hidden fields; silently treat as valid to avoid tipping them off,

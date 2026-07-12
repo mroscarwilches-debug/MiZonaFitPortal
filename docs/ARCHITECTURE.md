@@ -1,83 +1,100 @@
-# Architecture Proposal — Warrior Code Portal
+# Architecture — Why the Site Is Built This Way
 
 Date: 2026-07-04
 
-> **Decision update (2026-07-04):** the owner selected **AWS EC2** as the
-> production target (deployed manually via Terraform, see docs/DEPLOYMENT.md)
-> and the brand **"El Código del Guerrero — by Mr. Wilches"**. The hosting
-> comparison below is kept for reference; Cloudflare Pages remains the
-> documented lowest-cost alternative.
+> **Decision (2026-07-04):** the owner chose **AWS EC2** for production
+> (published manually with Terraform — see docs/DEPLOYMENT.md), under the
+> brand **"El Código del Guerrero — by Mr. Wilches"**. The hosting comparison
+> below is kept as a reference. Cloudflare Pages is still the cheapest
+> alternative if that ever changes.
 
-## 1. Nature of the Workload
-The portal is a static marketing site (HTML/CSS/JS + images). Until a payment
-gateway or member area exists, there is no server-side code. A static host is
-therefore the correct architecture: cheaper, faster (global CDN), more secure
-(no servers to patch), and simpler to operate than EC2 + Docker + nginx.
+## 1. What kind of site is this?
 
-## 2. Hosting Comparison (static site)
+The public marketing page is still static (HTML/CSS/JS + images) — that part
+of the hosting reasoning below hasn't changed. What *has* changed is the
+member area added in docs/AUTH_AND_AGENDAMIENTO.md (login, payment,
+valoración, booking): rather than build a custom server + database for that,
+it's built on managed services — Supabase Auth (login only) and the owner's
+own Google Sheets/Forms/Calendar (all client data, payment/booking status).
+The only actual server-side code in the project is 4 small Supabase Edge
+Functions that bridge Wompi/Google securely. This keeps the "no server to
+patch, cheap to run" reasoning intact even though the site now has accounts
+and payments.
 
-| Option | Monthly cost | Private previews (password/access control) | Custom domain + TLS | CDN | Limits / notes |
+## 2. Hosting options compared (for a static site)
+
+| Option | Monthly cost | Can you keep it private while building? | Custom domain + HTTPS | CDN | Notes |
 |---|---|---|---|---|---|
-| **Cloudflare Pages** | **$0** | Yes — Cloudflare Access on preview & production (free up to 50 users) | Free | Global, best-in-class | 500 builds/month free; unlimited bandwidth |
-| GitHub Pages | $0 | Only on private repos with GitHub Enterprise ($$) — otherwise always public | Free | Fastly | No access control on free tier → fails the "private during development" requirement |
-| Netlify | $0 free tier | Password protection requires paid plan ($19/user) | Free | Yes | 100 GB bandwidth/month free |
-| Vercel | $0 hobby | Password/SSO protection requires Pro ($20/user) | Free | Yes | Hobby tier forbids commercial use → not valid for a business site |
-| Firebase Hosting | ~$0 (Spark) | Preview channels have unguessable URLs but no real auth | Free | Google CDN | 10 GB storage / 360 MB/day transfer free |
-| Azure Static Web Apps | $0 free tier | Password protection requires Standard (~$9/month) | Free | Yes | Free tier fine otherwise |
-| Current: AWS EC2 t3.micro | ~$12–14 (instance + EBS + public IPv4) | Manual (SG rules) | Manual (certbot) | No | Requires patching, monitoring, deploy plumbing |
+| **Cloudflare Pages** | **$0** | Yes — free login-based access control for up to 50 users | Free | Yes, excellent | 500 builds/month free; unlimited bandwidth |
+| GitHub Pages | $0 | Only with a paid GitHub Enterprise plan — otherwise always public | Free | Yes | No free way to keep it private → doesn't meet the "private while building" need |
+| Netlify | Free tier available | Password protection needs a paid plan ($19/user) | Free | Yes | 100 GB bandwidth/month free |
+| Vercel | Free (hobby tier) | Password/login protection needs a paid Pro plan ($20/user) | Free | Yes | Free tier forbids commercial use → not valid for a business site |
+| Firebase Hosting | Nearly free | Preview links are hard to guess but not truly password-protected | Free | Yes | 10 GB storage / 360 MB per day free |
+| Azure Static Web Apps | Free tier available | Password protection needs a paid plan (~$9/month) | Free | Yes | Free tier is otherwise fine |
+| Current: AWS EC2 (t3.micro) | ~$12–14 | Manual setup via firewall rules | Manual (certbot) | No | You're responsible for patching, monitoring, and deployment |
 
 ### Recommendation: Cloudflare Pages
-- $0/month at this scale, unlimited bandwidth, global CDN.
-- **Cloudflare Access** satisfies the privacy requirement: the site stays behind
-  email-based authentication (your Gmail) during development and is opened to the
-  public with a one-line policy change when you say "publish".
-- Git-integrated: push to `main` → automatic build & deploy; PRs get preview URLs.
-- Free tier includes commercial use (unlike Vercel Hobby).
-- Growth path: Cloudflare Workers/Functions for future dynamic needs
-  (contact form, payment webhooks) without changing hosts.
+- Free at this scale, with unlimited bandwidth and a fast global CDN.
+- **Cloudflare Access** solves the "keep it private while building" need: the
+  site stays behind a login (your Gmail) during development, and can be
+  opened to the public with a single setting change when you're ready.
+- Connects directly to GitHub: push to `main` and it builds and publishes
+  automatically; pull requests get their own preview link.
+- Free tier allows commercial use (unlike Vercel's free tier).
+- Room to grow: Cloudflare Workers can add backend logic later (contact
+  form, payment webhooks) without switching hosts.
 
-### What happens to the AWS stack
-`terraform destroy` the EC2 instance and security group once Cloudflare Pages is
-live (keeps ~$12–14/month from burning during development). The S3 state bucket
-can stay (pennies) or be removed. The Terraform code remains in the repo as
-reference; a `docs/DEPLOYMENT.md` section documents the decommission steps.
+### What happens to the current AWS setup
+Once Cloudflare Pages is live, the AWS server and its firewall rules would be
+torn down (`terraform destroy`), which stops the ~$12–14/month cost. The S3
+bucket that stores Terraform's state can stay (it costs pennies) or be
+removed too. The Terraform code itself stays in the repo for reference, and
+docs/DEPLOYMENT.md would document the exact teardown steps.
 
-## 3. Target Repository Layout
+## 3. How the repo is organized
 
 ```
 /
-├── src/                    # site source (renamed from app/html)
+├── src/                    # site source (would replace app/html)
 │   ├── index.html
-│   ├── css/main.css        # extracted from inline <style>
-│   ├── js/main.js          # extracted from inline <script>
-│   └── assets/             # optimized WebP/AVIF images, logo, favicon
-├── docs/                   # English technical documentation
-├── tests/                  # Playwright E2E + accessibility (axe) tests
+│   ├── css/main.css        # pulled out of the page's inline <style>
+│   ├── js/main.js          # pulled out of the page's inline <script>
+│   └── assets/             # optimized images, logo, favicon
+├── supabase/functions/     # 4 small backend functions (login-gated payment/booking/status)
+├── google-workspace/       # script that recreates the client intake Forms + Sheets
+├── docs/                   # documentation
+├── tests/                  # browser tests + accessibility checks
 ├── .github/workflows/
-│   └── ci.yml              # lint + tests on PR; deploy handled by Cloudflare
+│   └── ci.yml              # checks code on every push; Cloudflare would handle publishing
 └── README.md
 ```
 
-No framework and no bundler: the site is one page; plain HTML/CSS/JS keeps the
-bundle minimal (target < 100 KB excluding images) and removes build complexity.
-If the site grows to many pages, revisit with Astro (static-first, zero JS by default).
+No framework, no build tool: it's a single page, so plain HTML/CSS/JS keeps
+things simple and small (the goal is under 100 KB, not counting images). If
+the site grows into many pages later, it's worth revisiting with a tool like
+Astro (built for static sites, ships very little JavaScript by default).
 
-## 4. Implementation Milestones
-1. **M1 — Assessment & architecture** (this document).
-2. **M2 — Codebase restructure**: extract CSS/JS, English naming, SEO metadata,
-   accessibility fixes, favicon.
-3. **M3 — Brand & imagery**: curate photos from `F:\MiZonaFit`, generate
-   WebP/AVIF responsive variants, integrate logo, redesign polish.
-4. **M4 — Testing**: Playwright E2E, axe accessibility, Lighthouse performance
-   budget, responsive checks.
-5. **M5 — Private deployment**: Cloudflare Pages + Access policy; decommission EC2.
-6. **M6 — Documentation & production checklist**: deployment guide, rollback/backup
-   strategy, go-live plan, payment gateway integration plan (Wompi/MercadoPago/Stripe
-   comparison for Colombia).
+## 4. How this was built, step by step
 
-## 5. Assumptions
-- The business operates in Colombia (Bogotá footer, MZF RUT documents) — payment
-  gateway plan will prioritize Wompi/MercadoPago over Stripe.
-- The GitHub repo may remain public or become private; Cloudflare Pages works with both.
-- Prices in the plans section ($29/$59/$99) are placeholders in USD — to be confirmed.
-- You have (or can create) a free Cloudflare account.
+1. **M1 — Look at the project and plan the architecture** (this document).
+2. **M2 — Clean up the codebase**: separate CSS/JS from the HTML, use clear
+   naming, add SEO tags, fix accessibility issues, add a favicon.
+3. **M3 — Brand and photos**: pick real photos, generate lightweight
+   WebP/AVIF versions in multiple sizes, add the logo, polish the design.
+4. **M4 — Testing**: browser tests, accessibility scans, a performance
+   budget, and checks on different screen sizes.
+5. **M5 — Publish it privately**: Cloudflare Pages with a login wall; retire
+   the AWS server.
+6. **M6 — Write the docs**: deployment guide, rollback/backup plans, a
+   go-live checklist, and a plan for accepting payments (comparing
+   Wompi/MercadoPago/Stripe for Colombia).
+
+## 5. Assumptions going in
+
+- The business is based in Colombia (Bogotá address, MZF business documents)
+  — so the payment plan favors Wompi/MercadoPago over Stripe.
+- The GitHub repo can stay public or go private — Cloudflare Pages works
+  either way.
+- The prices shown in the plans ($29/$59/$99) were early placeholders, later
+  replaced with real prices (see docs/PRODUCTION_CHECKLIST.md).
+- A free Cloudflare account is available if that path is chosen.

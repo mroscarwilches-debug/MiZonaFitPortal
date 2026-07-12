@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agenda tu llamada — El Código del Guerrero</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Ir al contenido principal</a>
+
+  <nav aria-label="Navegación principal">
+    <a class="logo" href="index.html#main" aria-label="El Código del Guerrero — inicio">El Código del <span>Guerrero</span></a>
+    <a href="dashboard.html" class="btn btn-secondary">Volver al panel</a>
+  </nav>
+
+  <main id="main">
+    <section class="section" aria-labelledby="schedule-title">
+      <h1 id="schedule-title" class="section-title">Agenda tu <span>llamada</span></h1>
+      <p class="section-subtitle">Sesión de 1 hora. Solo se muestran horarios realmente disponibles (6–8 a.m. y 7–9 p.m.).</p>
+
+      <p id="schedule-status" role="status" aria-live="polite">Buscando horarios disponibles…</p>
+      <div id="slot-grid" class="slot-grid" role="group" aria-label="Horarios disponibles"></div>
+
+      <div id="schedule-confirmed" class="card" hidden>
+        <h3>¡Llamada agendada!</h3>
+        <p id="schedule-confirmed-detail"></p>
+        <a href="dashboard.html" class="btn">Volver al panel</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>El Código del Guerrero</strong> &mdash; by Mr. Wilches.</p>
+  </footer>
+
+  <script type="module" src="js/schedule.js"></script>
+</body>
+</html>

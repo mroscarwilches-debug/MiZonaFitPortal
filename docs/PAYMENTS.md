@@ -1,58 +1,79 @@
-# Payment Gateway Integration Plan
+# Accepting Online Payments
 
-> Status: PLAN ONLY. No provider account is created and no credentials exist.
-> Everything here is sandbox-first and activates only at your explicit request.
+> Status: implemented against Wompi's **sandbox** (test) environment. No real
+> provider account/credentials exist yet — see docs/AUTH_AND_AGENDAMIENTO.md
+> for what the owner needs to set up before this goes live.
 
-## Context
+## Background
 
-The site sells three membership plans (Básico/Pro/Elite, monthly recurring).
-Business is based in Bogotá, Colombia → the gateway must support COP, local
-payment methods (PSE, Nequi, cards) and Colombian settlement.
+The site sells three personal coaching plans (Consultoría Express, Protocolo
+Estándar, Protocolo Black — a fourth plan, Seminario Corporativo, is a
+B2B quote request and isn't part of this flow). The business is based in
+Bogotá, Colombia, so the payment provider needs to support Colombian pesos
+(COP), local payment methods (PSE, Nequi, cards), and settle funds into a
+Colombian bank account.
 
-## Provider comparison (Colombia, 2026)
+## Comparing providers (Colombia, 2026)
 
 | | Wompi (Bancolombia) | Mercado Pago | Stripe |
 |---|---|---|---|
 | Local methods (PSE, Nequi) | ✅ Best coverage | ✅ Good | ⚠️ Limited |
-| Cards | ✅ | ✅ | ✅ |
-| Recurring subscriptions | ✅ (payment links / API) | ✅ | ✅ Best API |
-| Fees (approx.) | ~2.65% + fixed | ~3.29%–3.99% | ~3.25% + intl. considerations |
-| Settlement to Colombian bank | ✅ Native (Bancolombia) | ✅ | ⚠️ More friction |
+| Card payments | ✅ | ✅ | ✅ |
+| Recurring monthly billing | ✅ (payment links / API) | ✅ | ✅ Best API |
+| Fees (approximate) | ~2.65% + a fixed fee | ~3.29%–3.99% | ~3.25% + extra for international |
+| Pays out to a Colombian bank | ✅ Native (Bancolombia) | ✅ | ⚠️ More friction |
 | Hosted checkout (no backend needed) | ✅ Payment links | ✅ Checkout Pro | ✅ Payment Links |
-| Sandbox | ✅ Full sandbox environment | ✅ | ✅ |
+| Free sandbox for testing | ✅ Full sandbox | ✅ | ✅ |
 
-**Recommendation: Wompi** — best local method coverage, lowest fees, native
-Bancolombia settlement, and hosted payment links that work with a static site
-(no backend required for phase 1).
+**Chosen: Wompi** — the best coverage for local payment methods, the lowest
+fees, native settlement to Bancolombia, and a hosted checkout that needs no
+card data to ever touch this site.
 
-## Integration phases
+## How it actually works (implemented)
 
-### Phase 1 — Hosted payment links (no code, no backend)
-Each plan's "Empezar" button points to a provider-hosted payment link.
-Site change: replace `href="#contacto"` with the link URL. Zero PCI scope,
-zero backend, works today.
+1. A client registers (`signup.html`), then lands on `checkout.html` for
+   their chosen plan.
+2. `checkout.js` builds a Wompi **Web Checkout** redirect URL: the owner's
+   sandbox public key, a unique reference (`<plan>_<userId>_<timestamp>`),
+   and a redirect URL back to `payment-confirmation.html`. The browser is
+   redirected there — no card data is ever collected, stored, or
+   transmitted by this site.
+3. Wompi calls the `wompi-webhook` Supabase Edge Function server-to-server
+   when the transaction resolves. That function verifies Wompi's event
+   signature (the events secret never leaves Supabase), then records the
+   payment status in the "Estado de Cliente" tab of the owner's Google
+   Sheet, keyed by the client's email.
+4. `payment-confirmation.html` polls the `client-status` function (which
+   reads that same sheet) until it reflects the approved payment — the
+   redirect itself is never treated as proof of payment, only the webhook is.
 
-### Phase 2 — Embedded checkout (JS widget)
-Provider widget opens in-page. Requires adding the provider script origin to
-the CSP and a public (sandbox/production) key in the page. Still no backend.
+Full setup steps (Wompi sandbox account, events webhook URL, secrets) are in
+docs/AUTH_AND_AGENDAMIENTO.md.
 
-### Phase 3 — Webhooks + membership management (only if needed)
-Requires a small backend (Cloudflare Worker) to receive payment webhooks and a
-data store for memberships. Out of scope until the business needs it.
+## Prices are in USD, charged in COP at the day's exchange rate
 
-## Code abstraction (already in place by design)
+`index.html`, `signup.html`, and `checkout.html` all show plan prices in USD
+($25/$90/$115 for Consultoría Express/Protocolo Estándar/Protocolo Black —
+defined once in `PLANS` in `app/html/js/config.js`). Since Wompi charges in
+COP, `checkout.js` converts the USD price to COP right when the client clicks
+"Pagar", using Colombia's official daily exchange rate (TRM — Tasa
+Representativa del Mercado), published as open data by the Colombian
+government (`app/html/js/trm.js`). If that API is unreachable, it falls back
+to a fixed rate in `config.js` (`FALLBACK_USD_TO_COP`) so checkout still
+works — just slightly less precise. The checkout page also shows the client
+an estimated COP amount before they pay, so there are no surprises.
 
-The site keeps payments behind one seam: every plan CTA is an `<a class="btn">`
-inside `.plan`. Phase 1 = change three `href` values; no structural work.
-When/if Phase 2 arrives, add `js/payments.js` exposing
-`getCheckoutUrl(planId)` so provider choice stays swappable, with plan IDs
-(`basic`, `pro`, `elite`) as the stable contract.
+## The site's payment logic stays in one place
 
-## Sandbox validation plan (pre-activation)
+Everything payment-related lives in `app/html/js/checkout.js` (building the
+Wompi URL and doing the USD→COP conversion) and
+`supabase/functions/wompi-webhook/` (confirming the payment) — the plan
+catalog (`PLANS` in `app/html/js/config.js`) is the one place that defines
+each plan's id, name, and USD price, so adding or repricing a plan doesn't
+touch any other file.
 
-1. Create Wompi sandbox account (free, no bank account needed).
-2. Create three sandbox payment links (one per plan).
-3. Set them in the site on a branch; verify E2E flow with Wompi's test cards
-   and sandbox PSE.
-4. Only after your approval: swap sandbox links for production links
-   (requires Wompi production onboarding: RUT + bank account).
+## Known follow-up before going live
+
+- **Switch to production**: once Wompi's business onboarding is complete
+  (RUT + bank account), swap the sandbox public key and events secret for
+  the production ones — no code changes needed, only the two credentials.
